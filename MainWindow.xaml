@@ -3,10 +3,121 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TourPlanner"
+        xmlns:views="clr-namespace:TourPlanner.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Tour Planner" Height="800" Width="1200">
 
-    </Grid>
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#3399CC" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Padding" Value="10 5" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
+    </Window.Resources>
+
+    <ScrollViewer>
+        <Grid ShowGridLines="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="47*"/>
+                <ColumnDefinition Width="1136*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Margin="5,5,5,5" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Tour Planner" FontSize="20" FontWeight="Bold" Margin="10,10,0,0"
+                        FontFamily="Roboto" />
+
+                <Rectangle Grid.Row="1" Height="1" Fill="Gray" Margin="0,0,0,5" />
+
+                <views:NavBarView x:Name="NavBarView" Grid.Row="2" />
+
+                <views:SearchView x:Name="SearchView" Grid.Row="3" />
+
+                <Grid Grid.Row="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Command="{Binding ShowTourViewCommand}" Grid.Row="0" Grid.Column="0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="#3399CC" CornerRadius="5">
+                                    <TextBlock Text="Tours" FontSize="20" FontWeight="Bold" Padding="10"
+                                               Foreground="White"
+                                               TextAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Content="Add Tour" Command="{Binding ShowAddTourViewCommand}" Grid.Column="0" />
+
+                            <Button Content="Edit Tour" Command="{Binding EditTourCommand}" Grid.Column="1" />
+
+                            <Button Content="Delete Tour" Command="{Binding DeleteTourCommand}" Grid.Column="2" />
+
+                            <Button Content="Add Log" Command="{Binding ShowAddLogViewCommand}" Grid.Column="3" />
+
+                            <Button Content="Edit Log" Command="{Binding EditLogCommand}" Grid.Column="4" />
+
+                            <Button Content="Delete Log" Command="{Binding DeleteLogCommand}" Grid.Column="5" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+
+                <ContentControl Content="{Binding CurrentView}" Grid.Row="5" />
+            </Grid>
+
+            <Grid Background="#7FFFFFFF"
+                  Visibility="{Binding IsBusy, Converter={StaticResource VisibleIfTrueConverter}}" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="64*" />
+                    <ColumnDefinition Width="22*"/>
+                    <ColumnDefinition Width="505*"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="592*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
 </Window>

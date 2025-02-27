@@ -1,0 +1,106 @@
+﻿<UserControl x:Class="TourPlanner.Views.NavBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="100" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <!-- Stil für das gesamte Menü -->
+        <Style x:Key="MenuStyle" TargetType="{x:Type Menu}">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <!-- Stil für Haupt-Menüeinträge (top-level) -->
+        <Style x:Key="MenuItemStyle" TargetType="{x:Type MenuItem}">
+            <Setter Property="FontFamily" Value="Roboto" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Margin" Value="0,0,10,0" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="#333" />
+
+            <!-- Hover-Effekt: wenn die Maus über einem Menüeintrag schwebt -->
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#EEE" />
+                    <Setter Property="Foreground" Value="#000" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="#AAA" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Stil für Untermenüeinträge -->
+        <Style x:Key="SubMenuStyle" TargetType="{x:Type MenuItem}">
+            <Setter Property="FontFamily" Value="Roboto" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="10,5,10,5" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="#333" />
+
+            <!-- Hover-Effekt für Untermenüeinträge -->
+            <Style.Triggers>
+                <Trigger Property="IsHighlighted" Value="True">
+                    <Setter Property="Background" Value="#EEE" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="#AAA" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Stil für Trennlinien -->
+        <Style x:Key="SeparatorStyle" TargetType="{x:Type Separator}">
+            <Setter Property="Margin" Value="5,0,5,0" />
+            <Setter Property="Background" Value="Gray" />
+            <Setter Property="Height" Value="1" />
+        </Style>
+    </UserControl.Resources>
+
+    <!-- Menü -->
+    <DockPanel LastChildFill="True" VerticalAlignment="Center">
+        <!-- Hauptmenü auf der linken Seite -->
+        <Menu Style="{StaticResource MenuStyle}" VerticalAlignment="Center" DockPanel.Dock="Left">
+            <!-- Haupt-Menüeintrag "File" -->
+            <MenuItem Header="File" Width="120" Style="{StaticResource MenuItemStyle}">
+                <MenuItem Header="Import" Style="{StaticResource SubMenuStyle}" Command="{Binding ImportCommand}"/>
+                <MenuItem Header="Export" Style="{StaticResource SubMenuStyle}" Command="{Binding ExportCommand}"/>
+            </MenuItem>
+
+            <!-- Trennlinie zwischen "File" und "Report" -->
+            <Separator Style="{StaticResource SeparatorStyle}" />
+
+            <!-- Haupt-Menüeintrag "Report" -->
+            <MenuItem Header="Report" Width="120" Style="{StaticResource MenuItemStyle}">
+                <MenuItem Header="Tour Report" Style="{StaticResource SubMenuStyle}" Command="{Binding TourReportCommand}" />
+                <MenuItem Header="Summarize Report" Style="{StaticResource SubMenuStyle}" Command="{Binding SummarizeReportCommand}"/>
+            </MenuItem>
+
+            <!-- Zweite Trennlinie -->
+            <Separator Style="{StaticResource SeparatorStyle}" />
+
+            <!-- Haupt-Menüeintrag "Exit" -->
+            <MenuItem Header="Exit" Width="120" Style="{StaticResource MenuItemStyle}" Command="{Binding ExitCommand}" />
+        </Menu>
+
+        <!-- Help-Menü ganz rechts -->
+        <Menu Style="{StaticResource MenuStyle}" VerticalAlignment="Center" DockPanel.Dock="Right">
+            <MenuItem Header="Help" Width="120" Style="{StaticResource MenuItemStyle}">
+                <MenuItem Header="About" Style="{StaticResource SubMenuStyle}" Command="{Binding AboutCommand}" />
+            </MenuItem>
+        </Menu>
+    </DockPanel>
+</UserControl>
