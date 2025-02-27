@@ -52,7 +52,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="0" Style="{StaticResource SearchTextBoxStyle}" Text="{Binding SearchText}" />
+        <TextBox Grid.Column="0" Style="{StaticResource SearchTextBoxStyle}" Text="{Binding SearchText }" />
         <Button Grid.Column="1" Style="{StaticResource SearchButtonStyle}" Command="{Binding SearchCommand}" />
     </Grid>
 </UserControl>

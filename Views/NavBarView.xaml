@@ -97,7 +97,7 @@
         </Menu>
 
         <!-- Help-Menü ganz rechts -->
-        <Menu Style="{StaticResource MenuStyle}" VerticalAlignment="Center" DockPanel.Dock="Right">
+        <Menu Style="{StaticResource MenuStyle}" VerticalAlignment="Center" DockPanel.Dock="Right" HorizontalAlignment="Right">
             <MenuItem Header="Help" Width="120" Style="{StaticResource MenuItemStyle}">
                 <MenuItem Header="About" Style="{StaticResource SubMenuStyle}" Command="{Binding AboutCommand}" />
             </MenuItem>
