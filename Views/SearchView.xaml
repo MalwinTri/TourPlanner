@@ -8,6 +8,7 @@
 
     <UserControl.Resources>
 
+        <!-- Style for the search button -->
         <Style x:Key="SearchButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="White" />
             <Setter Property="BorderBrush" Value="#CCC" />
@@ -18,9 +19,7 @@
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="Content">
                 <Setter.Value>
-                    <Image
-                        Source="pack://application:,,,/Views/Icons/search.png"
-                        Stretch="Uniform" MaxHeight="20" />
+                    <Image Source="pack://application:,,,/TourPlanner;component/Views/Icons/search.png" />
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
@@ -33,7 +32,9 @@
             </Style.Triggers>
         </Style>
 
+        <!-- Style for the TextBox with watermark -->
         <Style x:Key="SearchTextBoxStyle" TargetType="{x:Type TextBox}">
+            <!-- Keep existing default setters -->
             <Setter Property="FontFamily" Value="Roboto" />
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Background" Value="White" />
@@ -44,6 +45,47 @@
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="Foreground" Value="#777" />
+
+            <!-- Override the control template to include a placeholder TextBlock -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <!-- Actual TextBox part -->
+                            <TextBox x:Name="PART_TextBox"
+                                     Text="{TemplateBinding Text}"
+                                     Background="{TemplateBinding Background}"
+                                     Foreground="{TemplateBinding Foreground}"
+                                     BorderBrush="{TemplateBinding BorderBrush}"
+                                     BorderThickness="{TemplateBinding BorderThickness}"
+                                     Padding="{TemplateBinding Padding}"
+                                     FontFamily="{TemplateBinding FontFamily}"
+                                     FontSize="{TemplateBinding FontSize}"/>
+
+                            <!-- Watermark (placeholder) text -->
+                            <TextBlock x:Name="Watermark"
+                                       Text="Search..."
+                                       Foreground="#999"
+                                       Margin="12,0,0,0"
+                                       VerticalAlignment="Center"
+                                       IsHitTestVisible="False"
+                                       Visibility="Collapsed"/>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Show watermark if Text is empty -->
+                            <Trigger SourceName="PART_TextBox" Property="Text" Value="">
+                                <Setter TargetName="Watermark" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+
+                            <!-- Hide watermark if the TextBox has focus -->
+                            <Trigger SourceName="PART_TextBox" Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Watermark" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </UserControl.Resources>
 
@@ -52,7 +94,14 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="0" Style="{StaticResource SearchTextBoxStyle}" Text="{Binding SearchText }" />
-        <Button Grid.Column="1" Style="{StaticResource SearchButtonStyle}" Command="{Binding SearchCommand}" />
+
+        <!-- Apply the watermark style here -->
+        <TextBox Grid.Column="0"
+                 Style="{StaticResource SearchTextBoxStyle}"
+                 Text="{Binding SearchText}" />
+
+        <Button Grid.Column="1"
+                Style="{StaticResource SearchButtonStyle}"
+                Command="{Binding SearchCommand}" />
     </Grid>
 </UserControl>

@@ -9,7 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Icons\" />
+    <None Remove="Views\Icons\search.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Icons\search.png" />
   </ItemGroup>
 
 </Project>
