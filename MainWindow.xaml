@@ -5,9 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:TourPlanner.Views"
         mc:Ignorable="d"
-        Title="Tour Planner" Height="800" Width="1200">
+        Title="Tour Planner"
+        Height="800"
+        Width="1200">
 
     <Window.Resources>
+        <!-- Standard-Style für Buttons -->
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#3399CC" />
             <Setter Property="Foreground" Value="White" />
@@ -30,15 +33,18 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Converter für Busy/Loading-Indikator -->
         <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
     </Window.Resources>
 
     <ScrollViewer>
         <Grid ShowGridLines="False">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="47*"/>
-                <ColumnDefinition Width="1136*"/>
+                <ColumnDefinition Width="47*" />
+                <ColumnDefinition Width="1136*" />
             </Grid.ColumnDefinitions>
+
             <Grid Margin="5,5,5,5" Grid.ColumnSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -47,68 +53,49 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition />
+                    <!-- Hier wird z. B. ContentControl eingefügt -->
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="Tour Planner" FontSize="20" FontWeight="Bold" Margin="10,10,0,0"
-                        FontFamily="Roboto" />
+                <!-- 1) Titel -->
+                <TextBlock Grid.Row="0"
+                           Text="Tour Planner"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Margin="10,10,0,0"
+                           FontFamily="Roboto" />
 
-                <Rectangle Grid.Row="1" Height="1" Fill="Gray" Margin="0,0,0,5" />
+                <!-- 2) Trennlinie -->
+                <Rectangle Grid.Row="1"
+                           Height="1"
+                           Fill="Gray"
+                           Margin="0,0,0,5" />
 
-                <views:NavBarView x:Name="NavBarView" Grid.Row="2" />
+                <!-- 3) NavBar -->
+                <views:NavBarView x:Name="NavBarView"
+                                  Grid.Row="2" />
 
-                <views:SearchView x:Name="SearchView" Grid.Row="3" />
+                <!-- 4) Suchleiste -->
+                <views:SearchView x:Name="SearchView"
+                                  Grid.Row="3" />
 
-                <Grid Grid.Row="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
-                    <Button Command="{Binding ShowTourViewCommand}" Grid.Row="0" Grid.Column="0">
-                        <Button.Template>
-                            <ControlTemplate TargetType="{x:Type Button}">
-                                <Border Background="#3399CC" CornerRadius="5">
-                                    <TextBlock Text="Tours" FontSize="20" FontWeight="Bold" Padding="10"
-                                               Foreground="White"
-                                               TextAlignment="Center" />
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="10">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                <!-- 5) NEUE UserControl für die Touren-Buttons / "ToursBarView" -->
+                <views:ToursBarView x:Name="ToursBarView"
+                                    Grid.Row="4" />
 
-                            <Button Content="Add Tour" Command="{Binding ShowAddTourViewCommand}" Grid.Column="0" />
-
-                            <Button Content="Edit Tour" Command="{Binding EditTourCommand}" Grid.Column="1" />
-
-                            <Button Content="Delete Tour" Command="{Binding DeleteTourCommand}" Grid.Column="2" />
-
-                            <Button Content="Add Log" Command="{Binding ShowAddLogViewCommand}" Grid.Column="3" />
-
-                            <Button Content="Edit Log" Command="{Binding EditLogCommand}" Grid.Column="4" />
-
-                            <Button Content="Delete Log" Command="{Binding DeleteLogCommand}" Grid.Column="5" />
-                        </Grid>
-                    </StackPanel>
-                </Grid>
-
-                <ContentControl Content="{Binding CurrentView}" Grid.Row="5" />
+                <!-- 6) ContentControl, z. B. wenn andere Views/Seiten angezeigt werden sollen -->
+                <ContentControl Content="{Binding CurrentView}"
+                                Grid.Row="5" />
             </Grid>
 
+            <!-- Loading-/Busy-Overlay -->
             <Grid Background="#7FFFFFFF"
-                  Visibility="{Binding IsBusy, Converter={StaticResource VisibleIfTrueConverter}}" Grid.ColumnSpan="2">
+                  Visibility="{Binding IsBusy, Converter={StaticResource VisibleIfTrueConverter}}"
+                  Grid.ColumnSpan="2">
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="64*" />
-                    <ColumnDefinition Width="22*"/>
-                    <ColumnDefinition Width="505*"/>
+                    <ColumnDefinition Width="22*" />
+                    <ColumnDefinition Width="505*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="592*" />
                 </Grid.ColumnDefinitions>
@@ -117,6 +104,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
+
             </Grid>
         </Grid>
     </ScrollViewer>
