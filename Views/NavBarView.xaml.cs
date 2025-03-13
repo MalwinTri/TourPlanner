@@ -15,6 +15,9 @@ using System.Windows.Shapes;
 
 namespace TourPlanner.Views
 {
+    /// <summary>
+    /// Interaction logic for NavBarView.xaml
+    /// </summary>
     public partial class NavBarView : UserControl
     {
         public NavBarView()
@@ -23,4 +26,3 @@ namespace TourPlanner.Views
         }
     }
 }
-
