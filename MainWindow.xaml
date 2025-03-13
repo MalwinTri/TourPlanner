@@ -1,8 +1,11 @@
 ﻿<Window x:Class="TourPlanner.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:views="clr-namespace:TourPlanner.Views"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:views="clr-namespace:TourPlanner.Views" 
         Title="Tour Planner"
-        Width="1200" Height="800">
+        Width="1200" 
+        Height="800"
+        >
 
     <Window.Resources>
         <!-- Beispiel-Style für Buttons -->
@@ -31,27 +34,8 @@
 
     <DockPanel>
         <views:NavBarView DockPanel.Dock="Top"/>
-        
-        <!-- 2) Titelzeile (z.B. "Tour Planner" + Suchfeld rechts) -->
-        <Grid DockPanel.Dock="Top" Background="#CCC" Height="40">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Tour Planner" 
-                       VerticalAlignment="Center"
-                       Margin="10,0"
-                       FontSize="16"
-                       FontWeight="Bold"/>
-
-            <!-- Platzhalter: Suchfeld rechts -->
-            <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center" Margin="0,0,10,0">
-                <TextBox Width="150" Margin="5,0"/>
-                <Button Content="🔍" Margin="5,0,5,0"/>
-            </StackPanel>
-        </Grid>
+        <views:TitleBarView DockPanel.Dock="Top"/>
 
         <!-- 3) Hauptbereich -->
         <Grid>
