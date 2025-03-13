@@ -1,16 +1,11 @@
 ﻿<Window x:Class="TourPlanner.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:TourPlanner.Views"
-        mc:Ignorable="d"
         Title="Tour Planner"
-        Height="800"
-        Width="1200">
+        Width="1200" Height="800">
 
     <Window.Resources>
-        <!-- Standard-Style für Buttons -->
+        <!-- Beispiel-Style für Buttons -->
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#3399CC" />
             <Setter Property="Foreground" Value="White" />
@@ -23,89 +18,192 @@
                         <Border Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="5"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                CornerRadius="5">
+                            <ContentPresenter 
+                                HorizontalAlignment="Center" 
+                                VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!-- Converter für Busy/Loading-Indikator -->
-        <BooleanToVisibilityConverter x:Key="VisibleIfTrueConverter" />
     </Window.Resources>
 
-    <ScrollViewer>
-        <Grid ShowGridLines="False">
+    <DockPanel>
+        <!-- 1) Oberes Menü (File, Edit, Options, Help) -->
+        <Menu DockPanel.Dock="Top" Background="#EEE" Padding="5">
+            <MenuItem Header="File"/>
+            <MenuItem Header="Edit"/>
+            <MenuItem Header="Options"/>
+            <MenuItem Header="Help"/>
+        </Menu>
+
+        <!-- 2) Titelzeile (z.B. "Tour Planner" + Suchfeld rechts) -->
+        <Grid DockPanel.Dock="Top" Background="#CCC" Height="40">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="47*" />
-                <ColumnDefinition Width="1136*" />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Grid Margin="5,5,5,5" Grid.ColumnSpan="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                    <!-- Hier wird z. B. ContentControl eingefügt -->
-                </Grid.RowDefinitions>
+            <TextBlock Text="Tour Planner" 
+                       VerticalAlignment="Center"
+                       Margin="10,0"
+                       FontSize="16"
+                       FontWeight="Bold"/>
 
-                <!-- 1) Titel -->
-                <TextBlock Grid.Row="0"
-                           Text="Tour Planner"
-                           FontSize="20"
-                           FontWeight="Bold"
-                           Margin="10,10,0,0"
-                           FontFamily="Roboto" />
-
-                <!-- 2) Trennlinie -->
-                <Rectangle Grid.Row="1"
-                           Height="1"
-                           Fill="Gray"
-                           Margin="0,0,0,5" />
-
-                <!-- 3) NavBar -->
-                <views:NavBarView x:Name="NavBarView"
-                                  Grid.Row="2" />
-
-                <!-- 4) Suchleiste -->
-                <views:SearchView x:Name="SearchView"
-                                  Grid.Row="3" />
-
-                <!-- 5) NEUE UserControl für die Touren-Buttons / "ToursBarView" -->
-                <views:ToursBarView x:Name="ToursBarView"
-                                    Grid.Row="4" />
-
-                <!-- 6) ContentControl, z. B. wenn andere Views/Seiten angezeigt werden sollen -->
-                <ContentControl Content="{Binding CurrentView}"
-                                Grid.Row="5" />
-            </Grid>
-
-            <!-- Loading-/Busy-Overlay -->
-            <Grid Background="#7FFFFFFF"
-                  Visibility="{Binding IsBusy, Converter={StaticResource VisibleIfTrueConverter}}"
-                  Grid.ColumnSpan="2">
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="64*" />
-                    <ColumnDefinition Width="22*" />
-                    <ColumnDefinition Width="505*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="592*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-            </Grid>
+            <!-- Platzhalter: Suchfeld rechts -->
+            <StackPanel Orientation="Horizontal" Grid.Column="2" VerticalAlignment="Center" Margin="0,0,10,0">
+                <TextBox Width="150" Margin="5,0"/>
+                <Button Content="🔍" Margin="5,0,5,0"/>
+            </StackPanel>
         </Grid>
-    </ScrollViewer>
+
+        <!-- 3) Hauptbereich -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <!-- Linke Spalte (Tourliste) -->
+                <ColumnDefinition Width="300"/>
+                <!-- Mittlere Spalte (Rest) -->
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <!-- Oben (Tabs + Karte) -->
+                <RowDefinition Height="*"/>
+                <!-- Unten (Tour Logs) -->
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Linke Tour-Liste -->
+            <Border Grid.Column="0" 
+                    Grid.RowSpan="2" 
+                    BorderBrush="#CCC" 
+                    BorderThickness="1,0,1,0"
+                    Background="White"
+                    Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Tours" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+
+                    <!-- Buttons (+, -, ...) analog zum Mockup -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Content="+" Width="30" Height="30"/>
+                        <Button Content="-" Width="30" Height="30"/>
+                        <Button Content="..." Width="30" Height="30"/>
+                    </StackPanel>
+
+                    <!-- Liste mit Touren (Beispiel) -->
+                    <ListBox Margin="0,10,0,0" Height="200">
+                        <ListBoxItem Content="Wienerwald"/>
+                        <ListBoxItem Content="Dopperlhütte"/>
+                        <ListBoxItem Content="Figlwarte"/>
+                        <ListBoxItem Content="Dorfrunde"/>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+
+            <!-- Oben: Tabs + Karte -->
+            <Grid Grid.Column="1" Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Reiter (General, Route, Misc) -->
+                <TabControl Grid.Row="0">
+                    <TabItem Header="General">
+                        <TextBlock Text="Allgemeine Infos" Margin="10" />
+                    </TabItem>
+                    <TabItem Header="Route">
+                        <TextBlock Text="Routen-Infos" Margin="10" />
+                    </TabItem>
+                    <TabItem Header="Misc">
+                        <TextBlock Text="Weitere Infos" Margin="10" />
+                    </TabItem>
+                </TabControl>
+
+                <!-- Beispiel: Karte / Grafik -->
+                <Border Grid.Row="1" BorderThickness="1" BorderBrush="#CCC" Margin="0,5,0,0">
+                    <TextBlock Text="(Karte/Grafik)" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center" 
+                               FontSize="20" 
+                               FontWeight="Bold"
+                               Foreground="#999"/>
+                </Border>
+
+                <!-- Buttons rechts bei der Karte (optional) -->
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Margin="0,0,10,10"
+                            Grid.Row="1">
+                    <Button Content="+" Width="30" Height="30"/>
+                    <Button Content="-" Width="30" Height="30"/>
+                    <Button Content="..." Width="30" Height="30"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Unten: Tour Logs -->
+            <Border Grid.Column="1" Grid.Row="1" 
+                    BorderBrush="#CCC" 
+                    BorderThickness="1,0,0,1"
+                    Background="White"
+                    Margin="0,5,0,0"
+                    Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Tour Logs" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+
+                    <!-- Platzhalter für Tabelle -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Header-Zeile -->
+                        <Border Grid.Row="0" Grid.Column="0" BorderBrush="#999" BorderThickness="1" Background="#CCE5FF">
+                            <TextBlock Text="Date" Padding="5"/>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="1" BorderBrush="#999" BorderThickness="1" Background="#CCE5FF">
+                            <TextBlock Text="Duration" Padding="5"/>
+                        </Border>
+                        <Border Grid.Row="0" Grid.Column="2" BorderBrush="#999" BorderThickness="1" Background="#CCE5FF">
+                            <TextBlock Text="Distance" Padding="5"/>
+                        </Border>
+
+                        <!-- Beispiel-Daten -->
+                        <Border Grid.Row="1" Grid.Column="0" BorderBrush="#999" BorderThickness="1">
+                            <TextBlock Text="Value 1" Padding="5"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="1" BorderBrush="#999" BorderThickness="1">
+                            <TextBlock Text="Value 2" Padding="5"/>
+                        </Border>
+                        <Border Grid.Row="1" Grid.Column="2" BorderBrush="#999" BorderThickness="1">
+                            <TextBlock Text="Value 3" Padding="5"/>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="0" BorderBrush="#999" BorderThickness="1">
+                            <TextBlock Text="Value 4" Padding="5"/>
+                        </Border>
+                        <Border Grid.Row="2" Grid.Column="1" BorderBrush="#999" BorderThickness="1">
+                            <TextBlock Text="Value 5" Padding="5"/>
+                        </Border>
+                        <Border Grid.Row="2" Grid.Column="2" BorderBrush="#999" BorderThickness="1">
+                            <TextBlock Text="Value 6" Padding="5"/>
+                        </Border>
+
+                        <!-- usw. ... -->
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
 </Window>
