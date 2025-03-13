@@ -1,13 +1,13 @@
 ﻿<Window x:Class="TourPlanner.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:TourPlanner.Views"
         Title="Tour Planner"
         Width="1200"
         Height="800">
 
-    <!-- Beispiel: Button-Styles etc. (optional) -->
+    <!-- Stile für Buttons (optional) -->
     <Window.Resources>
-        <!-- Beispiel-Style für Buttons -->
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#3399CC" />
             <Setter Property="Foreground" Value="White" />
@@ -29,50 +29,34 @@
         </Style>
     </Window.Resources>
 
-    <!-- Haupt-Layout: DockPanel (Menü oben, Rest unten) -->
+    <!-- Haupt-Layout: DockPanel -->
     <DockPanel>
-        <!-- 1) Oberes Menü (File, Edit, Options, Help) -->
-        <Menu DockPanel.Dock="Top" Background="#EEE" Padding="5">
-            <MenuItem Header="File"/>
-            <MenuItem Header="Edit"/>
-            <MenuItem Header="Options"/>
-            <MenuItem Header="Help"/>
-        </Menu>
 
-        <!-- 2) Titelzeile (z.B. "Tour Planner" + Suchfeld rechts) -->
-        <Grid DockPanel.Dock="Top" Background="#CCC" Height="40">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+        <!-- 1) Navigation Bar -->
+        <views:NavBarView DockPanel.Dock="Top"/>
 
-        <!-- 2) Haupt-Gitter -->
+        <!-- 2) SearchView direkt unter der Navigation Bar -->
+        <views:SearchView DockPanel.Dock="Top" Margin="10,0,10,5"/>
+
+        <!-- 3) Haupt-Gitter -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <!-- Linke Spalte (Tour-Liste) -->
                 <ColumnDefinition Width="300"/>
-                <!-- Rechte Spalte (Details) -->
-                <ColumnDefinition Width="*" />
+                <!-- Linke Spalte: Tour-Liste -->
+                <ColumnDefinition Width="*"/>
+                <!-- Rechte Spalte: Details -->
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <!-- Oben (Tabs + Karte) -->
                 <RowDefinition Height="*"/>
-                <!-- Unten (Tour Logs) -->
+                <!-- Oben: Tabs + Karte -->
                 <RowDefinition Height="Auto"/>
+                <!-- Unten: Tour Logs -->
             </Grid.RowDefinitions>
 
-            <!-- 3) ToursListView (linke Spalte) -->
-            <views:ToursListView Grid.Column="0"
-                                 Grid.RowSpan="2" />
-
-            <!-- 4) TourDetailsView (rechts oben) -->
-            <views:TourDetailsView Grid.Row="0" 
-                                   Grid.Column="1" />
-
-            <!-- 5) TourLogsView (rechts unten) -->
-            <views:TourLogsView   Grid.Row="1"
-                                  Grid.Column="1" />
+            <!-- 4) Views einfügen -->
+            <views:ToursListView Grid.Column="0" Grid.RowSpan="2" DataContext="{Binding ToursListViewModel}"/>
+            <views:TourDetailsView Grid.Row="0" Grid.Column="1" />
+            <views:TourLogsView Grid.Row="1" Grid.Column="1" />
         </Grid>
     </DockPanel>
 </Window>
