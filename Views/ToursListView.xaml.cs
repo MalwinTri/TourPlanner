@@ -1,51 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TourPlanner.ViewModels
 {
     public class ToursListViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<string> _tours;
+        private ObservableCollection<string> _tours = new();
+        private string _selectedTour;
+
+        public string SelectedTour
+        {
+            get => _selectedTour;
+            set
+            {
+                if (_selectedTour != value)
+                {
+                    _selectedTour = value;
+                    OnPropertyChanged(nameof(SelectedTour));
+                }
+            }
+        }
 
         public ObservableCollection<string> Tours
         {
             get => _tours;
             set
             {
-                _tours = value;
-                OnPropertyChanged(nameof(Tours));
+                if (_tours != value)
+                {
+                    _tours = value;
+                    OnPropertyChanged(nameof(Tours));
+                }
             }
         }
 
         public ToursListViewModel()
         {
-            // Beispiel-Daten, könnten aus einer Datenbank geladen werden
-            Tours = new ObservableCollection<string>
-            {
-                "Wienerwald",
-                "Dopperlhütte",
-                "Figlwarte",
-                "Dorfrunde"
-            };
+            // Beispiel-Touren-Daten
+            Tours.Add("Wienerwald");
+            Tours.Add("Dopperlhütte");
+            Tours.Add("Figlwarte");
+            Tours.Add("Dorfrunde");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

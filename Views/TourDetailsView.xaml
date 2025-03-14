@@ -11,7 +11,7 @@
         <!-- Tabs für Tour-Details -->
         <TabControl Grid.Row="0">
             <TabItem Header="General">
-                <TextBlock Text="Allgemeine Infos" Margin="10"/>
+                <TextBlock Text="General infos" Margin="10"/>
             </TabItem>
             <TabItem Header="Route">
                 <TextBlock Text="Routen-Infos" Margin="10"/>
@@ -23,7 +23,7 @@
 
         <!-- Karte oder Bildbereich -->
         <Border Grid.Row="1" BorderThickness="1" BorderBrush="#CCC" Margin="0,5,0,0">
-            <TextBlock Text="(Karte/Grafik)" 
+            <TextBlock Text="(No/Grafik)" 
                        HorizontalAlignment="Center" 
                        VerticalAlignment="Center" 
                        FontSize="20" 
