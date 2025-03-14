@@ -31,36 +31,27 @@
         </Style>
     </Window.Resources>
 
-    <!-- Haupt-Layout: DockPanel (Menü oben, Rest unten) -->
     <DockPanel>
         <views:NavBarView DockPanel.Dock="Top"/>
 
         <views:TitleBarView DockPanel.Dock="Top"/>
 
-        <!-- 3) Hauptbereich -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <!-- Linke Spalte (Tour-Liste) -->
                 <ColumnDefinition Width="300"/>
-                <!-- Rechte Spalte (Details) -->
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <!-- Oben (Tabs + Karte) -->
                 <RowDefinition Height="*"/>
-                <!-- Unten (Tour Logs) -->
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- 3) ToursListView (linke Spalte) -->
             <views:ToursListView Grid.Column="0"
                                  Grid.RowSpan="2" />
 
-            <!-- 4) TourDetailsView (rechts oben) -->
             <views:TourDetailsView Grid.Row="0" 
                                    Grid.Column="1" />
 
-            <!-- 5) TourLogsView (rechts unten) -->
             <views:TourLogsView   Grid.Row="1"
                                   Grid.Column="1" />
         </Grid>

@@ -25,7 +25,8 @@
 
         <StackPanel Orientation="Horizontal" Grid.Column="1" VerticalAlignment="Center" Margin="10">
             <Border CornerRadius="10,0,0,10" Background="#58729e" Margin="5,0,0,0" BorderBrush="Black" BorderThickness="1">
-                <TextBox Width="200" 
+                <TextBox Width="300" 
+                         FontSize="18"
                          Background="Transparent" 
                          Foreground="Black" 
                          BorderThickness="0" 
