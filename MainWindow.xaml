@@ -6,57 +6,41 @@
         Width="1200"
         Height="800">
 
-    <!-- Stile für Buttons (optional) -->
-    <Window.Resources>
-        <Style TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="#3399CC" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Padding" Value="10 5" />
-            <Setter Property="Margin" Value="5" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="5">
-                            <ContentPresenter 
-                                HorizontalAlignment="Center" 
-                                VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
-
-    <!-- Haupt-Layout: DockPanel -->
     <DockPanel>
-
         <!-- 1) Navigation Bar -->
-        <views:NavBarView DockPanel.Dock="Top"/>
+        <views:NavBarView DockPanel.Dock="Top" />
 
-        <!-- 2) SearchView direkt unter der Navigation Bar -->
-        <views:SearchView DockPanel.Dock="Top" Margin="10,0,10,5"/>
+        <!-- 2) TitleBarView (oder SearchView o.Ä.) -->
+        <views:TitleBarView DockPanel.Dock="Top" />
 
-        <!-- 3) Haupt-Gitter -->
+        <!-- 3) Hauptbereich -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300"/>
-                <!-- Linke Spalte: Tour-Liste -->
-                <ColumnDefinition Width="*"/>
-                <!-- Rechte Spalte: Details -->
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <!-- Oben: Tabs + Karte -->
-                <RowDefinition Height="Auto"/>
-                <!-- Unten: Tour Logs -->
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- 4) Views einfügen -->
-            <views:ToursListView Grid.Column="0" Grid.RowSpan="2" DataContext="{Binding ToursListViewModel}"/>
-            <views:TourDetailsView Grid.Row="0" Grid.Column="1" />
-            <views:TourLogsView Grid.Row="1" Grid.Column="1" />
+            <!-- Binde das DataContext des ToursListView an das MainViewModel -->
+            <views:ToursListView 
+                Grid.Column="0"
+                Grid.RowSpan="2"
+                DataContext="{Binding ToursListViewModel}" />
+
+            <!-- Optional: TourDetailsView -->
+            <views:TourDetailsView 
+                Grid.Row="0"
+                Grid.Column="1" 
+                DataContext="{Binding SelectedTour}" />
+
+            <!-- Optional: TourLogsView -->
+            <views:TourLogsView 
+                Grid.Row="1"
+                Grid.Column="1"
+                DataContext="{Binding SelectedTourLogs}" />
         </Grid>
     </DockPanel>
 </Window>

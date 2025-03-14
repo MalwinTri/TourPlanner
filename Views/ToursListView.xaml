@@ -10,13 +10,7 @@
              MinHeight="400">
 
     <!-- Rahmen um den Inhalt -->
-    <Border BorderBrush="#CCC"
-            BorderThickness="1"
-            Background="White"
-            Padding="10"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
-
+    <Border BorderBrush="#CCC" BorderThickness="1" Background="White" Padding="10">
         <Grid>
             <!-- 3 Zeilen: 0) Titel, 1) Buttons, 2) ListBox -->
             <Grid.RowDefinitions>
