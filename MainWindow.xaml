@@ -54,7 +54,7 @@
             <!-- Linke Spalte: ToursListView -->
             <views:ToursListView 
                 Grid.Column="0" 
-                Grid.RowSpan="2" 
+                Grid.RowSpan="2"      
                 />      
 
             <!-- Oben rechts: TourDetailsView -->
