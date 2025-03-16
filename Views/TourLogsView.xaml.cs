@@ -24,5 +24,14 @@ namespace TourPlanner.Views
         {
             InitializeComponent();
         }
+
+        private void AddLog_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Button clicked!");
+
+            AddLogWindow addLogWindow = new AddLogWindow();
+            addLogWindow.Owner = Window.GetWindow(this); // Setzt das Hauptfenster als Owner
+            addLogWindow.ShowDialog(); // Modales Fenster öffnen
+        }
     }
 }

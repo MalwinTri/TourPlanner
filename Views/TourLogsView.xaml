@@ -66,13 +66,14 @@
                             MinWidth="80">
 
                     <Button Content="ADD" 
-                            Width="80" 
-                            Height="40"
+                            Click="AddLog_Click" 
+                            Width="80" Height="40"
                             Background="LightGray" 
                             Foreground="Black" 
                             FontWeight="Bold" 
-                            BorderThickness="1"
+                            BorderThickness="1" 
                             Margin="5"/>
+
 
                     <Button Content="DEL" 
                             Width="80" 
