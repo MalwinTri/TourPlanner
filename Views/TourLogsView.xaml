@@ -27,7 +27,8 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <DataGrid Grid.Column="0"
+                <DataGrid x:Name="LogsDataGrid"
+                    Grid.Column="0"
                           ItemsSource="{Binding SelectedTourLogs}" 
                           AutoGenerateColumns="False" 
                           HeadersVisibility="Column" 
@@ -74,8 +75,8 @@
                             BorderThickness="1" 
                             Margin="5"/>
 
-
                     <Button Content="DEL" 
+                            Click="DelLog_Click"
                             Width="80" 
                             Height="40" 
                             Background="LightGray" 
@@ -85,6 +86,7 @@
                             Margin="5"/>
 
                     <Button Content="MOD" 
+                            Click="ModLog_Click"
                             Width="80" 
                             Height="40" 
                             Background="LightGray" 

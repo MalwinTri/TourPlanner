@@ -1,23 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using TourPlanner.Models;
+using TourPlanner.ViewModels;
 
 namespace TourPlanner.Views
 {
-    /// <summary>
-    /// Interaction logic for TourLogsView.xaml
-    /// </summary>
+
     public partial class TourLogsView : UserControl
     {
         public TourLogsView()
@@ -27,11 +15,48 @@ namespace TourPlanner.Views
 
         private void AddLog_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Button clicked!");
-
             AddLogWindow addLogWindow = new AddLogWindow();
-            addLogWindow.Owner = Window.GetWindow(this); // Setzt das Hauptfenster als Owner
-            addLogWindow.ShowDialog(); // Modales Fenster öffnen
+            addLogWindow.Owner = Window.GetWindow(this);
+            addLogWindow.ShowDialog();
+        }
+
+        private void DelLog_Click(object sender, RoutedEventArgs e)
+        {
+            ConfirmDeleteWindow confirmWin = new ConfirmDeleteWindow();
+            confirmWin.Owner = Window.GetWindow(this);
+
+            bool? result = confirmWin.ShowDialog();
+            if (result == true)
+            {
+                MessageBox.Show("Log deleted successfully!");
+            }
+        }
+        private void ModLog_Click(object sender, RoutedEventArgs e)
+        {
+            if (LogsDataGrid.SelectedItem is TourLog selectedLog)
+            {
+                EditLogWindow editWindow = new EditLogWindow(selectedLog);
+                editWindow.Owner = Window.GetWindow(this);
+
+                bool? result = editWindow.ShowDialog();
+                if (result == true)
+                {
+                    TourLog updatedLog = editWindow.GetUpdatedLog(); 
+
+                    selectedLog.DateTime = updatedLog.DateTime;
+                    selectedLog.Difficulty = updatedLog.Difficulty;
+                    selectedLog.TotalDistance = updatedLog.TotalDistance;
+                    selectedLog.TotalTime = updatedLog.TotalTime;
+                    selectedLog.Rating = updatedLog.Rating;
+                    selectedLog.Comment = updatedLog.Comment;
+
+                    MessageBox.Show("Log successfully updated!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("No log selected!");
+            }
         }
     }
 }
