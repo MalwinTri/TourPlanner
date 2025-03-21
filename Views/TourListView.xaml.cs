@@ -18,5 +18,12 @@ namespace TourPlanner.Views
                 vm.SelectedTour = selectedTour;
             }
         }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddTourWindow addTourWindow = new AddTourWindow();
+            addTourWindow.Owner = Window.GetWindow(this);
+            addTourWindow.ShowDialog();
+        }
     }
 }
