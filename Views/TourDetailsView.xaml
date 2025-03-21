@@ -32,6 +32,7 @@
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -49,30 +50,30 @@
         <TextBlock Text="Details" Style="{StaticResource HeaderStyle}" Grid.ColumnSpan="2"/>
 
         <TextBlock Text="Name:" Style="{StaticResource LabelStyle}" Grid.Row="1" Grid.Column="0"/>
-        <TextBlock Text="{Binding Name}" Style="{StaticResource ValueStyle}" Grid.Row="1" Grid.Column="1"/>
+        <TextBlock Text="{Binding SelectedTour.Name}" Style="{StaticResource ValueStyle}" Grid.Row="1" Grid.Column="1"/>
 
         <TextBlock Text="Description:" Style="{StaticResource LabelStyle}" Grid.Row="2" Grid.Column="0"/>
-        <TextBlock Text="{Binding Description}" Style="{StaticResource ValueStyle}" Grid.Row="2" Grid.Column="1"/>
+        <TextBlock Text="{Binding SelectedTour.Description}" Style="{StaticResource ValueStyle}" Grid.Row="2" Grid.Column="1"/>
 
         <TextBlock Text="From:" Style="{StaticResource LabelStyle}" Grid.Row="3" Grid.Column="0"/>
-        <TextBlock Text="{Binding From}" Style="{StaticResource ValueStyle}" Grid.Row="3" Grid.Column="1"/>
+        <TextBlock Text="{Binding SelectedTour.From}" Style="{StaticResource ValueStyle}" Grid.Row="3" Grid.Column="1"/>
 
         <TextBlock Text="To:" Style="{StaticResource LabelStyle}" Grid.Row="4" Grid.Column="0"/>
-        <TextBlock Text="{Binding To}" Style="{StaticResource ValueStyle}" Grid.Row="4" Grid.Column="1"/>
+        <TextBlock Text="{Binding SelectedTour.To}" Style="{StaticResource ValueStyle}" Grid.Row="4" Grid.Column="1"/>
 
         <TextBlock Text="Transport Type:" Style="{StaticResource LabelStyle}" Grid.Row="5" Grid.Column="0"/>
-        <TextBlock Text="{Binding TransportType}" Style="{StaticResource ValueStyle}" Grid.Row="5" Grid.Column="1"/>
+        <TextBlock Text="{Binding SelectedTour.TransportType}" Style="{StaticResource ValueStyle}" Grid.Row="5" Grid.Column="1"/>
 
         <TextBlock Text="Distance:" Style="{StaticResource LabelStyle}" Grid.Row="6" Grid.Column="0"/>
-        <TextBlock Text="{Binding Distance}" Style="{StaticResource ValueStyle}" Grid.Row="6" Grid.Column="1"/>
+        <TextBlock Text="{Binding SelectedTour.Distance}" Style="{StaticResource ValueStyle}" Grid.Row="6" Grid.Column="1"/>
 
         <TextBlock Text="Estimated Time:" Style="{StaticResource LabelStyle}" Grid.Row="7" Grid.Column="0"/>
-        <TextBlock Text="{Binding EstimatedTime}" Style="{StaticResource ValueStyle}" Grid.Row="7" Grid.Column="1"/>
+        <TextBlock Text="{Binding SelectedTour.EstimatedTime}" Style="{StaticResource ValueStyle}" Grid.Row="7" Grid.Column="1"/>
 
         <TextBlock Text="Route Information:" Style="{StaticResource LabelStyle}" Grid.Row="8" Grid.Column="0"/>
-        <TextBlock Text="{Binding EstimatedTime}" Style="{StaticResource ValueStyle}" Grid.Row="7" Grid.Column="1"/>
+        <TextBlock Text="{Binding SelectedTour.RouteInformation}" Style="{StaticResource ValueStyle}" Grid.Row="8" Grid.Column="1"/>
 
-        <Border Grid.Row="1" Grid.Column="1" Grid.RowSpan="8" Margin="10" Background="#e0e0e0"
+        <Border Grid.Row="1" Grid.Column="2" Grid.RowSpan="8" Margin="10" Background="#e0e0e0"
                 BorderBrush="Black" BorderThickness="1">
             <TextBlock Text="Image Placeholder" HorizontalAlignment="Center" VerticalAlignment="Center"
                        FontSize="16" FontWeight="Bold"/>

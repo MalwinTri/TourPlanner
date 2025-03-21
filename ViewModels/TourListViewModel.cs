@@ -1,9 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using TourPlanner.ViewModels;
 
 namespace TourPlanner.ViewModels
 {
-    public class TourListViewModel : ViewModelBase
+    public class TourListViewModel : BaseViewModel
     {
         private ObservableCollection<Tour> _tours;
         private Tour _selectedTour;
@@ -11,11 +10,7 @@ namespace TourPlanner.ViewModels
         public ObservableCollection<Tour> Tours
         {
             get => _tours;
-            set
-            {
-                _tours = value;
-                OnPropertyChanged();
-            }
+            set => SetProperty(ref _tours, value);
         }
 
         public Tour SelectedTour
@@ -23,8 +18,11 @@ namespace TourPlanner.ViewModels
             get => _selectedTour;
             set
             {
-                _selectedTour = value;
-                OnPropertyChanged();
+                if (_selectedTour != value)
+                {
+                    _selectedTour = value;
+                    OnPropertyChanged(nameof(SelectedTour));
+                }
             }
         }
 

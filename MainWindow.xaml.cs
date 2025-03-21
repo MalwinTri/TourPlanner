@@ -23,4 +23,9 @@ public partial class MainWindow : Window
         InitializeComponent();
         DataContext = new TourListViewModel();
     }
+
+    private void TourListView_Loaded(object sender, RoutedEventArgs e)
+    {
+
+    }
 }
