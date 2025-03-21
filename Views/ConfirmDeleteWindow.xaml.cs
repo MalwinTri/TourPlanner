@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using TourPlanner.ViewModels; // ✅ Sicherstellen, dass das richtige ViewModel genutzt wird
+using TourPlanner.ViewModels;
 
 namespace TourPlanner.Views
 {
