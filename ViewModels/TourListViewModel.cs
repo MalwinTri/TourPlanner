@@ -1,34 +1,33 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Controls;
 
 namespace TourPlanner.ViewModels
 {
-    public class TourListViewModel : BaseViewModel
+    public class TourListViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<Tour> _tours;
         private Tour _selectedTour;
-
-        public ObservableCollection<Tour> Tours
-        {
-            get => _tours;
-            set => SetProperty(ref _tours, value);
-        }
-
         public Tour SelectedTour
         {
             get => _selectedTour;
             set
             {
-                if (_selectedTour != value)
-                {
-                    _selectedTour = value;
-                    OnPropertyChanged(nameof(SelectedTour));
-                }
+                _selectedTour = value;
+                OnPropertyChanged(nameof(SelectedTour));
             }
+        }
+
+        public ObservableCollection<Tour> Tours { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public TourListViewModel()
         {
-            // Initialize the Tours collection with sample data
             Tours = new ObservableCollection<Tour>
             {
                 new Tour { Name = "Tour 1", Description = "A beautiful bike tour.", From = "City A", To = "City B", TransportType = "Bike", Distance = 15.5, EstimatedTime = "1h 30m" },
@@ -37,8 +36,8 @@ namespace TourPlanner.ViewModels
                 new Tour { Name = "Tour 4", Description = "A challenging running route.", From = "Park Entrance", To = "Park Exit", TransportType = "Run", Distance = 10.0, EstimatedTime = "1h" }
             };
 
-            // Set the first tour as the selected tour by default
             SelectedTour = Tours[0];
         }
+
     }
 }

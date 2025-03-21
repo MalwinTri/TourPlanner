@@ -36,13 +36,14 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
-                <ListView ItemsSource="{Binding Tours}" SelectedItem="{Binding SelectedTour}" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <ListView ItemsSource="{Binding Tours}" x:Name="tourlist" SelectedItem="{Binding SelectedTour, Mode=TwoWay}" SelectionChanged="ListView_SelectionChanged">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}" FontSize="14" Padding="5"/>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10">
                     <Button Content="Add" Margin="5" Padding="10"/>

@@ -15,9 +15,13 @@ namespace TourPlanner;
 
 public partial class MainWindow : Window
 {
+    private TourListViewModel tourListViewModel = new TourListViewModel();
+
     public MainWindow()
     {
         InitializeComponent();
-        this.DataContext = new MainViewModel();
+
+        tourListView.DataContext = tourListViewModel;
+        tourDetailsView.SetViewModel(tourListViewModel);
     }
 }

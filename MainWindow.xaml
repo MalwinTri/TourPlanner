@@ -6,8 +6,8 @@
         Background="AliceBlue"
         Title="Tour Planner"
         Width="1200" Height="800">
+    
 
-    <!-- Beispiel: Button-Styles etc. -->
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Background" Value="#3399CC" />
@@ -33,10 +33,8 @@
     <DockPanel>
         <views:NavBarView DockPanel.Dock="Top" />
 
-        <!-- (Optional) TitleBarView, wie deine Suchleiste -->
         <views:TitleBarView DockPanel.Dock="Top"/>
 
-        <!-- Hauptbereich -->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300"/>
@@ -47,19 +45,18 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <!-- Linke Spalte: ToursListView -->
-            <views:ToursListView 
+            <views:TourListView 
+                x:Name="tourListView"
                 Grid.Column="0" 
                 Grid.RowSpan="2" 
                 />      
 
-            <!-- Oben rechts: TourDetailsView -->
-            <views:TourDetailsView 
+            <views:TourDetailsView
+                x:Name="tourDetailsView"
                 Grid.Row="0"
                 Grid.Column="1"
                 />
 
-            <!-- Unten rechts: LogsView -->
             <views:TourLogsView 
                 Grid.Row="1"
                 Grid.Column="1"/>
