@@ -48,7 +48,7 @@
             </Grid.RowDefinitions>
 
             <!-- Linke Spalte: ToursListView -->
-            <views:ToursListView 
+            <views:TourListView 
                 Grid.Column="0" 
                 Grid.RowSpan="2" 
                 />      
