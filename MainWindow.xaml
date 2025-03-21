@@ -6,64 +6,33 @@
         Title="Tour Planner"
         Width="1200" Height="800">
 
-    <!-- Beispiel: Button-Styles etc. -->
-    <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="#3399CC" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Padding" Value="10 5" />
-            <Setter Property="Margin" Value="5" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="5">
-                            <ContentPresenter 
-                                HorizontalAlignment="Center" 
-                                VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
 
     <DockPanel>
-        <!-- (Optional) Navigation oben -->
         <views:NavBarView DockPanel.Dock="Top" />
 
-        <!-- (Optional) TitleBarView, wie deine Suchleiste -->
         <views:TitleBarView DockPanel.Dock="Top"/>
 
-        <!-- Hauptbereich -->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300"/>
-                <!-- Linker Bereich -->
                 <ColumnDefinition Width="*" />
-                <!-- Rechter Bereich -->
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <!-- Oben: z.B. Tabs + Karte -->
                 <RowDefinition Height="Auto" />
-                <!-- Unten: Logs -->
             </Grid.RowDefinitions>
 
-            <!-- Linke Spalte: ToursListView -->
-            <views:ToursListView 
-                Grid.Column="0" 
-                Grid.RowSpan="2" 
-                />      
+            <views:TourListView 
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.RowSpan="2"
+                />
 
-            <!-- Oben rechts: TourDetailsView -->
             <views:TourDetailsView 
                 Grid.Row="0"
                 Grid.Column="1"
                 />
 
-            <!-- Unten rechts: LogsView -->
             <views:TourLogsView 
                 Grid.Row="1"
                 Grid.Column="1"

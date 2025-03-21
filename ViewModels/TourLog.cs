@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TourPlanner.Models  // Namespace, sicherstellen, dass er zu deinem Projekt passt
+namespace TourPlanner.ViewModels  // Namespace, sicherstellen, dass er zu deinem Projekt passt
 {
     public class TourLog
     {
