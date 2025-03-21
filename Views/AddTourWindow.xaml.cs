@@ -1,27 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Win32;
+using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace TourPlanner.Views
 {
-    /// <summary>
-    /// Interaction logic for AddTourWindow.xaml
-    /// </summary>
     public partial class AddTourWindow : Window
     {
         public AddTourWindow()
         {
             InitializeComponent();
+        }
+
+        private void UploadImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Dateiauswahl-Dialog öffnen
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Bilddateien (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                // Dateiname anzeigen
+                ImageFileNameTextBlock.Text = Path.GetFileName(openFileDialog.FileName);
+
+                // Bild laden und anzeigen
+                BitmapImage bitmap = new BitmapImage(new Uri(openFileDialog.FileName));
+                TourImage.Source = bitmap;
+
+                // Optional: Pfad zur Bilddatei speichern oder weitere Verarbeitung durchführen
+            }
         }
     }
 }

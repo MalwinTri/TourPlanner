@@ -26,5 +26,12 @@ namespace TourPlanner.Views
             InitializeComponent();
             DataContext = new TourListViewModel();
         }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddTourWindow addTourWindow = new AddTourWindow();
+            addTourWindow.Owner = Window.GetWindow(this);
+            addTourWindow.ShowDialog();
+        }
     }
 }

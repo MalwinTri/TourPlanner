@@ -45,10 +45,11 @@
                 </ListView>
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10">
-                    <Button Content="Add" Margin="5" Padding="10"/>
+                    <Button Content="Add" Margin="5" Padding="10" Click="AddButton_Click"/>
                     <Button Content="Delete" Margin="5" Padding="10"/>
                     <Button Content="Modify" Margin="5" Padding="10"/>
                 </StackPanel>
+
             </Grid>
         </GroupBox>
     </Grid>
