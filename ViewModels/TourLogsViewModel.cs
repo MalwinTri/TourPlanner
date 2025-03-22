@@ -78,11 +78,13 @@ namespace TourPlanner.ViewModels
 
         private void AddLog()
         {
-            var win = new AddLogWindow();
-            if (win.ShowDialog() == true)
+            var win = new AddLogWindow(newLog =>
             {
+                Logs.Add(newLog);
                 MessageBox.Show("Log added!");
-            }
+            });
+
+            win.ShowDialog();
         }
 
         private void EditLog()
