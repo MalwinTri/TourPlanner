@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 public class RelayCommand : ICommand
 {
@@ -9,16 +8,21 @@ public class RelayCommand : ICommand
     public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
     {
         _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-        _canExecute = canExecute;
+        _canExecute = canExecute ?? (_ => true);
     }
 
-    public bool CanExecute(object parameter) => _canExecute == null || _canExecute(parameter);
+    public bool CanExecute(object parameter) => _canExecute(parameter);
 
     public void Execute(object parameter) => _execute(parameter);
 
     public event EventHandler CanExecuteChanged
     {
-        add { CommandManager.RequerySuggested += value; }
-        remove { CommandManager.RequerySuggested -= value; }
+        add => CommandManager.RequerySuggested += value;
+        remove => CommandManager.RequerySuggested -= value;
+    }
+
+    public void RaiseCanExecuteChanged()
+    {
+        CommandManager.InvalidateRequerySuggested();
     }
 }

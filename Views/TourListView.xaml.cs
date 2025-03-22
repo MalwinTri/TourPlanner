@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using TourPlanner.ViewModels;
 using TourPlanner.Models;
+using System.Windows;
 
 namespace TourPlanner.Views
 {
@@ -17,13 +18,6 @@ namespace TourPlanner.Views
             {
                 vm.SelectedTour = selectedTour;
             }
-        }
-
-        private void AddButton_Click(object sender, RoutedEventArgs e)
-        {
-            AddTourWindow addTourWindow = new AddTourWindow();
-            addTourWindow.Owner = Window.GetWindow(this);
-            addTourWindow.ShowDialog();
         }
     }
 }

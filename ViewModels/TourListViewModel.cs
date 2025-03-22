@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Controls;
+using System.Windows;
+using System.Windows.Input;
+using TourPlanner.Views;
 
 namespace TourPlanner.ViewModels
 {
@@ -19,12 +21,13 @@ namespace TourPlanner.ViewModels
 
         public ObservableCollection<Tour> Tours { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public ICommand AddTourCommand { get; }
+        public ICommand DeleteTourCommand { get; }
+        public ICommand ModifyTourCommand { get; }
 
-        protected void OnPropertyChanged(string propertyName)
-        {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public TourListViewModel()
         {
@@ -36,8 +39,47 @@ namespace TourPlanner.ViewModels
                 new Tour { Name = "Tour 4", Description = "A challenging running route.", From = "Park Entrance", To = "Park Exit", TransportType = "Run", Distance = 10.0, EstimatedTime = "1h" }
             };
 
-            SelectedTour = Tours[0];
+            AddTourCommand = new RelayCommand(_ => OpenAddTourWindow());
+            DeleteTourCommand = new RelayCommand(_ => OpenDeleteTourWindow(), _ => SelectedTour != null);
+            ModifyTourCommand = new RelayCommand(_ => OpenEditTourWindow(), _ => SelectedTour != null);
         }
 
+        private void OpenAddTourWindow()
+        {
+            var window = new AddTourWindow();
+            if (window.ShowDialog() == true)
+            {
+                // Handle result here if needed
+                // Example: addTourWindow.NewTour
+            }
+        }
+
+        private void OpenDeleteTourWindow()
+        {
+            var deleteWindow = new DeleteTourWindow();
+            if (deleteWindow.ShowDialog() == true && deleteWindow.Confirmed)
+            {
+                Tours.Remove(SelectedTour);
+                SelectedTour = null;
+            }
+        }
+
+        private void OpenEditTourWindow()
+        {
+            var editWindow = new EditTourWindow(SelectedTour);
+            if (editWindow.ShowDialog() == true)
+            {
+                var updated = editWindow.UpdatedTour;
+
+                SelectedTour.Name = updated.Name;
+                SelectedTour.Description = updated.Description;
+                SelectedTour.From = updated.From;
+                SelectedTour.To = updated.To;
+                SelectedTour.Distance = updated.Distance;
+                SelectedTour.EstimatedTime = updated.EstimatedTime;
+                SelectedTour.RouteInformation = updated.RouteInformation;
+                SelectedTour.TransportType = updated.TransportType;
+            }
+        }
     }
 }

@@ -50,4 +50,11 @@ public class Tour : BaseViewModel
         get => _estimatedTime;
         set => SetProperty(ref _estimatedTime, value);
     }
+
+    private string _routeInformation;
+    public string RouteInformation
+    {
+        get => _routeInformation;
+        set => SetProperty(ref _routeInformation, value);
+    }
 }

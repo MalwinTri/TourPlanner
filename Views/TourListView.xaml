@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:TourPlanner.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <UserControl.Resources>
         <Style TargetType="GroupBox">
             <Setter Property="HeaderTemplate">
@@ -28,15 +28,24 @@
             <Setter Property="BorderThickness" Value="1"/>
         </Style>
     </UserControl.Resources>
+
     <Grid>
         <GroupBox Header="Tours" Margin="10" BorderThickness="2">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="3*" />
+                    <!-- Mehr Platz für die ListView -->
+                    <ColumnDefinition Width="Auto" />
+                    <!-- Buttons nehmen nur benötigten Platz -->
                 </Grid.ColumnDefinitions>
 
-                <ListView ItemsSource="{Binding Tours}" x:Name="tourlist" SelectedItem="{Binding SelectedTour, Mode=TwoWay}" SelectionChanged="ListView_SelectionChanged">
+                <!-- ListView für die Touren -->
+                <ListView ItemsSource="{Binding Tours}" 
+                          x:Name="tourlist" 
+                          SelectedItem="{Binding SelectedTour, Mode=TwoWay}" 
+                          SelectionChanged="ListView_SelectionChanged"
+                          Grid.Column="0"
+                          Margin="10">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}" FontSize="14" Padding="5"/>
@@ -44,11 +53,41 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
+                <StackPanel Grid.Column="1" Grid.Row="0"
+                            Orientation="Vertical"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Margin="10"
+                            MinWidth="80">
 
-                <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10">
-                    <Button Content="Add" Margin="5" Padding="10" Click="AddButton_Click"/>
-                    <Button Content="Delete" Margin="5" Padding="10"/>
-                    <Button Content="Modify" Margin="5" Padding="10"/>
+                    <Button Content="ADD" 
+                        Command="{Binding AddTourCommand}" 
+                        Width="80" Height="40"
+                        Background="LightGray" 
+                        Foreground="Black" 
+                        FontWeight="Bold" 
+                        BorderThickness="1" 
+                        Margin="5"/>
+
+                                    <Button Content="DEL" 
+                        Command="{Binding DeleteTourCommand}"
+                        Width="80" 
+                        Height="40" 
+                        Background="LightGray" 
+                        Foreground="Black" 
+                        FontWeight="Bold" 
+                        BorderThickness="1"
+                        Margin="5"/>
+
+                                <Button Content="MOD" 
+                        Command="{Binding ModifyTourCommand}"
+                        Width="80" 
+                        Height="40" 
+                        Background="LightGray" 
+                        Foreground="Black" 
+                        FontWeight="Bold" 
+                        BorderThickness="1"
+                        Margin="5"/>    
                 </StackPanel>
 
             </Grid>
