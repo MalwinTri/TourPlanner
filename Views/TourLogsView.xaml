@@ -29,7 +29,6 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <!-- DataGrid (readonly) -->
                 <DataGrid x:Name="LogsDataGrid"
                           Grid.Column="0"
                           ItemsSource="{Binding Logs}" 

@@ -66,4 +66,13 @@ public class Tour : BaseViewModel
         get => _imagePath;
         set => SetProperty(ref _imagePath, value);
     }
+    public string DisplayImagePath
+    {
+        get
+        {
+            return string.IsNullOrEmpty(ImagePath)
+                ? "pack://application:,,,/Picture/Tour.jpeg"
+                : ImagePath;
+        }
+    }
 }

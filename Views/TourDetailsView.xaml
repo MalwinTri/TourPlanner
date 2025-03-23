@@ -104,7 +104,7 @@
                    Style="{StaticResource ValueStyle}"
                    Grid.Row="8" Grid.Column="1"/>
 
-       
+
         <Border Grid.Row="1"
                 Grid.Column="2"
                 Grid.RowSpan="8"
@@ -112,11 +112,12 @@
                 Background="#e0e0e0"
                 BorderBrush="Black"
                 BorderThickness="1">
-            <TextBlock Text="Image Placeholder"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontSize="16"
-                       FontWeight="Bold"/>
+            <Image Source="pack://application:,,,/Picture/Tour.jpeg"
+             Stretch="Uniform" Height="600" />
         </Border>
+
+
+
+
     </Grid>
 </UserControl>

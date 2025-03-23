@@ -46,6 +46,17 @@ namespace TourPlanner.ViewModels
             set { _comment = value; OnPropertyChanged(nameof(Comment)); }
         }
 
+        private string _difficulty;
+        public string Difficulty
+        {
+            get => _difficulty;
+            set
+            {
+                _difficulty = value;
+                OnPropertyChanged(nameof(Difficulty));
+            }
+        }
+
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
 
@@ -92,7 +103,7 @@ namespace TourPlanner.ViewModels
                 TotalTime = parsedTime,
                 Rating = parsedRating,
                 Comment = Comment,
-                Difficulty = "Easy" 
+                Difficulty = this.Difficulty
             };
 
             _addLogAction?.Invoke(newLog);

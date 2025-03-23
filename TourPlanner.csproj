@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿ <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Picture\Tour.jpeg" />
     <None Remove="Views\Icons\search.png" />
   </ItemGroup>
 
@@ -17,7 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Picture\" />
+    <Resource Include="Picture\Tour.jpeg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>
