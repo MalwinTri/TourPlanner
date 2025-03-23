@@ -109,7 +109,7 @@ namespace TourPlanner.ViewModels
 
         private void DeleteLog()
         {
-            var win = new ConfirmDeleteWindow();
+            var win = new DeleteTourLogWindow();
             if (win.ShowDialog() == true)
             {
                 Logs.Remove(SelectedLog);
