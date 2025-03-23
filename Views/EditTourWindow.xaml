@@ -5,6 +5,23 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
+        <Style TargetType="Button" x:Key="DefaultButtonStyle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="10,0,0,0"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Width" Value="100"/>
+        </Style>
+
+        <Style TargetType="Button" x:Key="CancelButtonStyle" BasedOn="{StaticResource DefaultButtonStyle}">
+            <Setter Property="Background" Value="#ccc"/>
+            <Setter Property="BorderBrush" Value="#999"/>
+        </Style>
+
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="#444"/>
@@ -19,17 +36,6 @@
             <Setter Property="BorderThickness" Value="1"/>
         </Style>
 
-        <Style TargetType="Button">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Margin" Value="10,0,0,0"/>
-            <Setter Property="Padding" Value="10,5"/>
-            <Setter Property="Background" Value="#58729e"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#58729e"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Width" Value="100"/>
-        </Style>
-
         <Style TargetType="ComboBox">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Margin" Value="0,5,0,0"/>
@@ -42,27 +48,32 @@
     <Grid Margin="20">
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <TextBlock Text="Edit Tour" FontSize="24" FontWeight="Bold" Foreground="#58729e" Margin="0,0,0,20" TextAlignment="Center"/>
+                <TextBlock Text="Edit Tour"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="#58729e"
+                           Margin="0,0,0,20"
+                           TextAlignment="Center"/>
 
                 <Label Content="Name"/>
-                <TextBox Name="NameTextBox"/>
+                <TextBox Text="{Binding Name, Mode=TwoWay}" />
 
                 <Label Content="Tour Description"/>
-                <TextBox Name="DescriptionTextBox" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+                <TextBox Text="{Binding Description, Mode=TwoWay}" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
 
                 <StackPanel Orientation="Horizontal">
                     <StackPanel Width="200">
                         <Label Content="From"/>
-                        <TextBox Name="FromTextBox"/>
+                        <TextBox Text="{Binding From, Mode=TwoWay}" />
                     </StackPanel>
                     <StackPanel Width="200" Margin="20,0,0,0">
                         <Label Content="To"/>
-                        <TextBox Name="ToTextBox"/>
+                        <TextBox Text="{Binding To, Mode=TwoWay}" />
                     </StackPanel>
                 </StackPanel>
 
                 <Label Content="Transport Type"/>
-                <ComboBox Name="TransportTypeComboBox">
+                <ComboBox SelectedItem="{Binding TransportType, Mode=TwoWay}">
                     <ComboBoxItem Content="Car"/>
                     <ComboBoxItem Content="Bicycle"/>
                     <ComboBoxItem Content="Walking"/>
@@ -71,28 +82,39 @@
                 <StackPanel Orientation="Horizontal">
                     <StackPanel Width="200">
                         <Label Content="Tour Distance (km)"/>
-                        <TextBox Name="DistanceTextBox"/>
+                        <TextBox Text="{Binding Distance, Mode=TwoWay}" />
                     </StackPanel>
                     <StackPanel Width="200" Margin="20,0,0,0">
                         <Label Content="Estimated Time"/>
-                        <TextBox Name="EstimatedTimeTextBox"/>
+                        <TextBox Text="{Binding EstimatedTime, Mode=TwoWay}" />
                     </StackPanel>
                 </StackPanel>
 
                 <Label Content="Route Information"/>
-                <TextBox Name="RouteInfoTextBox" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
+                <TextBox Text="{Binding RouteInformation, Mode=TwoWay}" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
 
                 <Label Content="Tour Image"/>
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Upload Picture" Command="{Binding UploadImageCommand}" />
-                    <TextBlock Name="ImageFileNameTextBlock" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <Button Content="Upload Picture"
+                            Command="{Binding UploadImageCommand}"
+                            Style="{StaticResource DefaultButtonStyle}" Width="130"/>
+                    <TextBlock Text="{Binding ImagePath}" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </StackPanel>
-                <Image Name="TourImage" Height="200" Margin="0,10,0,0"/>
+                <Image Source="{Binding ImagePreview}" Height="200" Margin="0,10,0,0"/>
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
-                    <Button Content="Cancel" Name="CancelButton" Background="#999" BorderBrush="#999"/>
-                    <Button Content="Create" Name="SaveButton"/>
+                    <Button Content="Cancel"
+                        Name="CancelButton"
+                        Style="{StaticResource CancelButtonStyle}"
+                        Command="{Binding CancelCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" />
+                    <Button Content="Save"
+                        Name="SaveButton"
+                        Style="{StaticResource DefaultButtonStyle}"
+                        Command="{Binding SaveCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" />
                 </StackPanel>
+
             </StackPanel>
         </ScrollViewer>
     </Grid>
