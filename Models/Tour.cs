@@ -1,4 +1,6 @@
 using TourPlanner.ViewModels;
+using System.ComponentModel;
+using System;
 
 public class Tour : BaseViewModel
 {
@@ -44,8 +46,8 @@ public class Tour : BaseViewModel
         set => SetProperty(ref _distance, value);
     }
 
-    private string _estimatedTime;
-    public string EstimatedTime
+    private TimeSpan _estimatedTime;
+    public TimeSpan EstimatedTime
     {
         get => _estimatedTime;
         set => SetProperty(ref _estimatedTime, value);
