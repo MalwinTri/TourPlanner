@@ -16,4 +16,8 @@
     <EmbeddedResource Include="Views\Icons\search.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Picture\" />
+  </ItemGroup>
+
 </Project>

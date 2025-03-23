@@ -6,16 +6,15 @@ namespace TourPlanner.Views
 {
     public partial class EditTourWindow : Window
     {
-        private readonly EditTourViewModel _viewModel;
+        public EditTourViewModel ViewModel { get; }
+
+        public Tour UpdatedTour => ViewModel.EditedTour;
 
         public EditTourWindow(Tour tourToEdit)
         {
             InitializeComponent();
-
-            _viewModel = new EditTourViewModel(tourToEdit);
-            DataContext = _viewModel;
+            ViewModel = new EditTourViewModel(tourToEdit);
+            DataContext = ViewModel;
         }
-
-        public Tour UpdatedTour => _viewModel.EditedTour;
     }
 }

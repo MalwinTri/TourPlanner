@@ -57,4 +57,11 @@ public class Tour : BaseViewModel
         get => _routeInformation;
         set => SetProperty(ref _routeInformation, value);
     }
+
+    private string _imagePath;
+    public string ImagePath
+    {
+        get => _imagePath;
+        set => SetProperty(ref _imagePath, value);
+    }
 }
