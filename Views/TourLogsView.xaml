@@ -47,7 +47,6 @@
                           CanUserAddRows="False"
                           CanUserDeleteRows="False">
 
-                    <!-- Header Style -->
                     <DataGrid.Resources>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="#d2e8f7"/>
@@ -60,7 +59,6 @@
                         </Style>
                     </DataGrid.Resources>
 
-                    <!-- Columns -->
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Date/Time" Binding="{Binding DateTime}" Width="*" >
                             <DataGridTextColumn.ElementStyle>
@@ -112,7 +110,6 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <!-- Buttons -->
                 <StackPanel Grid.Column="1"
                             Orientation="Vertical"
                             VerticalAlignment="Center"

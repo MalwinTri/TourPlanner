@@ -41,53 +41,107 @@ namespace TourPlanner.ViewModels
         public string Name
         {
             get => _tour.Name;
-            set { _tour.Name = value; OnPropertyChanged(nameof(Name)); }
+            set
+            {
+                if (_tour.Name != value)
+                {
+                    _tour.Name = value;
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
         }
 
         public string Description
         {
             get => _tour.Description;
-            set { _tour.Description = value; OnPropertyChanged(nameof(Description)); }
+            set
+            {
+                if (_tour.Description != value)
+                {
+                    _tour.Description = value;
+                    OnPropertyChanged(nameof(Description));
+                }
+            }
         }
-
         public string From
         {
             get => _tour.From;
-            set { _tour.From = value; OnPropertyChanged(nameof(From)); }
+            set
+            {
+                if (_tour.From != value)
+                {
+                    _tour.From = value;
+                    OnPropertyChanged(nameof(From));
+                }
+            }
         }
 
         public string To
         {
             get => _tour.To;
-            set { _tour.To = value; OnPropertyChanged(nameof(To)); }
+            set
+            {
+                if (_tour.To != value)
+                {
+                    _tour.To = value;
+                    OnPropertyChanged(nameof(To));
+                }
+            }
         }
 
         public double Distance
         {
             get => _tour.Distance;
-            set { _tour.Distance = value; OnPropertyChanged(nameof(Distance)); }
+            set
+            {
+                if (_tour.Distance != value)
+                {
+                    _tour.Distance = value;
+                    OnPropertyChanged(nameof(Distance));
+                }
+            }
         }
 
         public TimeSpan EstimatedTime
         {
             get => _tour.EstimatedTime;
-            set { _tour.EstimatedTime = value; OnPropertyChanged(nameof(EstimatedTime)); }
+            set
+            {
+                if (_tour.EstimatedTime != value)
+                {
+                    _tour.EstimatedTime = value;
+                    OnPropertyChanged(nameof(EstimatedTime));
+                }
+            }
         }
 
         public string RouteInformation
         {
             get => _tour.RouteInformation;
-            set { _tour.RouteInformation = value; OnPropertyChanged(nameof(RouteInformation)); }
+            set
+            {
+                if (_tour.RouteInformation != value)
+                {
+                    _tour.RouteInformation = value;
+                    OnPropertyChanged(nameof(RouteInformation));
+                }
+            }
         }
 
         public string TransportType
         {
             get => _tour.TransportType;
-            set { _tour.TransportType = value; OnPropertyChanged(nameof(TransportType)); }
+            set
+            {
+                if (_tour.TransportType != value)
+                {
+                    _tour.TransportType = value;
+                    OnPropertyChanged(nameof(TransportType));
+                }
+            }
         }
 
         public Tour EditedTour => _tour;
-
         public EditTourViewModel(Tour tourToEdit)
         {
             _tour = new Tour
@@ -102,12 +156,12 @@ namespace TourPlanner.ViewModels
                 TransportType = tourToEdit.TransportType
             };
 
-            SaveCommand = new RelayCommand(o => Save(o));
-            CancelCommand = new RelayCommand(o => Cancel(o));
-            UploadImageCommand = new RelayCommand(_ => UploadImage());
+            SaveCommand = new RelayCommand(Save);
+            CancelCommand = new RelayCommand(Cancel);
+            UploadImageCommand = new RelayCommand(UploadImage);
         }
 
-        private void UploadImage()
+        private void UploadImage(object obj)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {

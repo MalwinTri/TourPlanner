@@ -1,21 +1,21 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Media.Imaging;
+﻿using System.Windows;
+using TourPlanner.Models;
 using TourPlanner.ViewModels;
 
 namespace TourPlanner.Views
 {
     public partial class EditTourWindow : Window
     {
-        public EditTourViewModel ViewModel { get; }
-
-        public Tour UpdatedTour => ViewModel.EditedTour;
+        private readonly EditTourViewModel _viewModel;
 
         public EditTourWindow(Tour tourToEdit)
         {
             InitializeComponent();
-            ViewModel = new EditTourViewModel(tourToEdit);
-            DataContext = ViewModel;
+
+            _viewModel = new EditTourViewModel(tourToEdit);
+            DataContext = _viewModel;
         }
+
+        public Tour UpdatedTour => _viewModel.EditedTour;
     }
 }
