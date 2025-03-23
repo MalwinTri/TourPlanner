@@ -34,12 +34,9 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*" />
-                    <!-- Mehr Platz für die ListView -->
                     <ColumnDefinition Width="Auto" />
-                    <!-- Buttons nehmen nur benötigten Platz -->
                 </Grid.ColumnDefinitions>
 
-                <!-- ListView für die Touren -->
                 <ListView ItemsSource="{Binding Tours}" 
                           x:Name="tourlist" 
                           SelectedItem="{Binding SelectedTour, Mode=TwoWay}" 

@@ -28,6 +28,6 @@ namespace TourPlanner.ViewModels
             CloseWindow?.Invoke(true);
         }
 
-        public Action<bool> CloseWindow { get; set; }  // gets set in the Window
+        public Action<bool> CloseWindow { get; set; } 
     }
 }
