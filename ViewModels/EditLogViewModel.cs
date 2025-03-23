@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using TourPlanner.Models;
@@ -7,23 +9,50 @@ namespace TourPlanner.ViewModels
 {
     public class EditLogViewModel : BaseViewModel
     {
-        private TourLog _editedLog;
-        public TourLog EditedLog
+        private DateTime _dateTime;
+        private string _difficulty;
+        private double _totalDistance;
+        private TimeSpan _totalTime;
+        private int _rating;
+        private string _comment;
+
+        public TourLog EditedLog { get; }
+
+        public DateTime DateTime
         {
-            get => _editedLog;
-            set
-            {
-                _editedLog = value;
-                OnPropertyChanged();
-            }
+            get => _dateTime;
+            set { _dateTime = value; OnPropertyChanged(); }
         }
 
-        public DateTime DateTime { get; set; }
-        public string Difficulty { get; set; }
-        public double TotalDistance { get; set; }
-        public TimeSpan TotalTime { get; set; }
-        public int Rating { get; set; }
-        public string Comment { get; set; }
+        public string Difficulty
+        {
+            get => _difficulty;
+            set { _difficulty = value; OnPropertyChanged(); }
+        }
+
+        public double TotalDistance
+        {
+            get => _totalDistance;
+            set { _totalDistance = value; OnPropertyChanged(); }
+        }
+
+        public TimeSpan TotalTime
+        {
+            get => _totalTime;
+            set { _totalTime = value; OnPropertyChanged(); }
+        }
+
+        public int Rating
+        {
+            get => _rating;
+            set { _rating = value; OnPropertyChanged(); }
+        }
+
+        public string Comment
+        {
+            get => _comment;
+            set { _comment = value; OnPropertyChanged(); }
+        }
 
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
@@ -32,9 +61,8 @@ namespace TourPlanner.ViewModels
 
         public EditLogViewModel(TourLog log)
         {
-            _editedLog = log;
+            EditedLog = log;
 
-            // Populate fields with existing data
             DateTime = log.DateTime;
             Difficulty = log.Difficulty;
             TotalDistance = log.TotalDistance;
@@ -48,14 +76,12 @@ namespace TourPlanner.ViewModels
 
         private void Save(object obj)
         {
-            // Optional: Add more validation logic if needed
             if (Rating < 1 || Rating > 5)
             {
                 MessageBox.Show("Rating must be between 1 and 5.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // Apply changes back to the TourLog object
             EditedLog.DateTime = DateTime;
             EditedLog.Difficulty = Difficulty;
             EditedLog.TotalDistance = TotalDistance;
@@ -70,5 +96,12 @@ namespace TourPlanner.ViewModels
         {
             CloseAction?.Invoke();
         }
+
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -91,21 +91,20 @@ namespace TourPlanner.ViewModels
         {
             if (SelectedLog == null) return;
 
-            var win = new EditLogWindow(SelectedLog);
-            if (win.ShowDialog() == true)
+            var window = new EditLogWindow(SelectedLog)
             {
-                var updated = win.GetUpdatedLog();
+                Owner = Application.Current.MainWindow
+            };
 
-                SelectedLog.DateTime = updated.DateTime;
-                SelectedLog.Difficulty = updated.Difficulty;
-                SelectedLog.TotalDistance = updated.TotalDistance;
-                SelectedLog.TotalTime = updated.TotalTime;
-                SelectedLog.Rating = updated.Rating;
-                SelectedLog.Comment = updated.Comment;
+            bool? result = window.ShowDialog();
 
+            if (result == true)
+            {
                 MessageBox.Show("Log successfully updated!");
             }
         }
+
+
 
         private void DeleteLog()
         {

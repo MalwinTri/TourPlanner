@@ -49,8 +49,7 @@ namespace TourPlanner.ViewModels
             var window = new AddTourWindow();
             if (window.ShowDialog() == true)
             {
-                // Handle result here if needed
-                // Example: addTourWindow.NewTour
+
             }
         }
 

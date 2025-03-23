@@ -11,11 +11,13 @@ namespace TourPlanner.Views
         public EditLogWindow(TourLog log)
         {
             InitializeComponent();
+
             _viewModel = new EditLogViewModel(log);
-            _viewModel.CloseAction = () => this.Close();
+            _viewModel.CloseAction = () => this.DialogResult = true;
+
             DataContext = _viewModel;
         }
 
-        public TourLog GetUpdatedLog() => _viewModel.EditedLog; 
+        public TourLog GetUpdatedLog() => _viewModel.EditedLog;
     }
 }

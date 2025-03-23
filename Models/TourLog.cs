@@ -1,19 +1,55 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
-namespace TourPlanner.Models  
+namespace TourPlanner.Models
 {
-    public class TourLog
+    public class TourLog : INotifyPropertyChanged
     {
-        public DateTime DateTime { get; set; }
-        public string Comment { get; set; }
-        public string Difficulty { get; set; }
-        public double TotalDistance { get; set; }  
-        public TimeSpan TotalTime { get; set; }    
-        public int Rating { get; set; }              
-    }
+        private DateTime _dateTime;
+        private string _comment;
+        private string _difficulty;
+        private double _totalDistance;
+        private TimeSpan _totalTime;
+        private int _rating;
 
+        public DateTime DateTime
+        {
+            get => _dateTime;
+            set { _dateTime = value; OnPropertyChanged(nameof(DateTime)); }
+        }
+
+        public string Comment
+        {
+            get => _comment;
+            set { _comment = value; OnPropertyChanged(nameof(Comment)); }
+        }
+
+        public string Difficulty
+        {
+            get => _difficulty;
+            set { _difficulty = value; OnPropertyChanged(nameof(Difficulty)); }
+        }
+
+        public double TotalDistance
+        {
+            get => _totalDistance;
+            set { _totalDistance = value; OnPropertyChanged(nameof(TotalDistance)); }
+        }
+
+        public TimeSpan TotalTime
+        {
+            get => _totalTime;
+            set { _totalTime = value; OnPropertyChanged(nameof(TotalTime)); }
+        }
+
+        public int Rating
+        {
+            get => _rating;
+            set { _rating = value; OnPropertyChanged(nameof(Rating)); }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
 }
