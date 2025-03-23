@@ -41,107 +41,53 @@ namespace TourPlanner.ViewModels
         public string Name
         {
             get => _tour.Name;
-            set
-            {
-                if (_tour.Name != value)
-                {
-                    _tour.Name = value;
-                    OnPropertyChanged(nameof(Name));
-                }
-            }
+            set { _tour.Name = value; OnPropertyChanged(nameof(Name)); }
         }
 
         public string Description
         {
             get => _tour.Description;
-            set
-            {
-                if (_tour.Description != value)
-                {
-                    _tour.Description = value;
-                    OnPropertyChanged(nameof(Description));
-                }
-            }
+            set { _tour.Description = value; OnPropertyChanged(nameof(Description)); }
         }
+
         public string From
         {
             get => _tour.From;
-            set
-            {
-                if (_tour.From != value)
-                {
-                    _tour.From = value;
-                    OnPropertyChanged(nameof(From));
-                }
-            }
+            set { _tour.From = value; OnPropertyChanged(nameof(From)); }
         }
 
         public string To
         {
             get => _tour.To;
-            set
-            {
-                if (_tour.To != value)
-                {
-                    _tour.To = value;
-                    OnPropertyChanged(nameof(To));
-                }
-            }
+            set { _tour.To = value; OnPropertyChanged(nameof(To)); }
         }
 
         public double Distance
         {
             get => _tour.Distance;
-            set
-            {
-                if (_tour.Distance != value)
-                {
-                    _tour.Distance = value;
-                    OnPropertyChanged(nameof(Distance));
-                }
-            }
+            set { _tour.Distance = value; OnPropertyChanged(nameof(Distance)); }
         }
 
         public TimeSpan EstimatedTime
         {
             get => _tour.EstimatedTime;
-            set
-            {
-                if (_tour.EstimatedTime != value)
-                {
-                    _tour.EstimatedTime = value;
-                    OnPropertyChanged(nameof(EstimatedTime));
-                }
-            }
+            set { _tour.EstimatedTime = value; OnPropertyChanged(nameof(EstimatedTime)); }
         }
 
         public string RouteInformation
         {
             get => _tour.RouteInformation;
-            set
-            {
-                if (_tour.RouteInformation != value)
-                {
-                    _tour.RouteInformation = value;
-                    OnPropertyChanged(nameof(RouteInformation));
-                }
-            }
+            set { _tour.RouteInformation = value; OnPropertyChanged(nameof(RouteInformation)); }
         }
 
         public string TransportType
         {
             get => _tour.TransportType;
-            set
-            {
-                if (_tour.TransportType != value)
-                {
-                    _tour.TransportType = value;
-                    OnPropertyChanged(nameof(TransportType));
-                }
-            }
+            set { _tour.TransportType = value; OnPropertyChanged(nameof(TransportType)); }
         }
 
         public Tour EditedTour => _tour;
+
         public EditTourViewModel(Tour tourToEdit)
         {
             _tour = new Tour
@@ -153,8 +99,15 @@ namespace TourPlanner.ViewModels
                 Distance = tourToEdit.Distance,
                 EstimatedTime = tourToEdit.EstimatedTime,
                 RouteInformation = tourToEdit.RouteInformation,
-                TransportType = tourToEdit.TransportType
+                TransportType = tourToEdit.TransportType,
+                ImagePath = tourToEdit.ImagePath 
             };
+
+            if (!string.IsNullOrEmpty(_tour.ImagePath))
+            {
+                ImagePath = _tour.ImagePath;
+                ImagePreview = new BitmapImage(new Uri(ImagePath));
+            }
 
             SaveCommand = new RelayCommand(Save);
             CancelCommand = new RelayCommand(Cancel);
@@ -172,8 +125,10 @@ namespace TourPlanner.ViewModels
             {
                 ImagePath = openFileDialog.FileName;
                 ImagePreview = new BitmapImage(new Uri(ImagePath));
+                _tour.ImagePath = ImagePath; 
             }
         }
+
 
         private void Save(object window)
         {

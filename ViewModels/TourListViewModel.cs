@@ -81,6 +81,7 @@ namespace TourPlanner.ViewModels
                 SelectedTour.EstimatedTime = updated.EstimatedTime;
                 SelectedTour.RouteInformation = updated.RouteInformation;
                 SelectedTour.TransportType = updated.TransportType;
+                SelectedTour.ImagePath = updated.ImagePath;
             }
         }
     }
