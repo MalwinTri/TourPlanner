@@ -1,5 +1,6 @@
 # TourPlanner
-
+# Wireframe
+  ![Wireframe](/Doc/SWEN_Wireframe_V2.png)
 # UX
 
 This is the wireframe for our **Tour Planner** app, designed to make creating, managing, and tracking tours simple and intuitive. The layout is clean and organized, ensuring a smooth user experience while keeping all essential features easily accessible.
