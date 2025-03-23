@@ -12,7 +12,14 @@ namespace TourPlanner.Views
         public DeleteTourWindow()
         {
             InitializeComponent();
+
             ViewModel = new DeleteTourViewModel();
+            ViewModel.CloseWindow = result =>
+            {
+                DialogResult = result;
+                Close();
+            };
+
             DataContext = ViewModel;
         }
     }
