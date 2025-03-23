@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using TourPlanner.Views;
+using TourPlanner.Models;
 
 namespace TourPlanner.ViewModels
 {
@@ -33,10 +34,10 @@ namespace TourPlanner.ViewModels
         {
             Tours = new ObservableCollection<Tour>
             {
-                new Tour { Name = "Tour 1", Description = "A beautiful bike tour.", From = "City A", To = "City B", TransportType = "Bike", Distance = 15.5, EstimatedTime = "1h 30m" },
-                new Tour { Name = "Tour 2", Description = "A scenic hike through the mountains.", From = "Mountain Base", To = "Mountain Peak", TransportType = "Hike", Distance = 8.2, EstimatedTime = "3h" },
-                new Tour { Name = "Tour 3", Description = "A relaxing vacation tour.", From = "Beach A", To = "Beach B", TransportType = "Car", Distance = 120.0, EstimatedTime = "2h" },
-                new Tour { Name = "Tour 4", Description = "A challenging running route.", From = "Park Entrance", To = "Park Exit", TransportType = "Run", Distance = 10.0, EstimatedTime = "1h" }
+                new Tour { Name = "Tour 1", Description = "A beautiful bike tour.", From = "City A", To = "City B", TransportType = "Bike", Distance = 15.5, EstimatedTime = TimeSpan.Parse("01:00:00"), RouteInformation = "dasd" },
+                new Tour { Name = "Tour 2", Description = "A scenic hike through the mountains.", From = "Mountain Base", To = "Mountain Peak", TransportType = "Hike", Distance = 8.2, EstimatedTime = TimeSpan.Parse("03:00:00"), RouteInformation = "dasd" },
+                new Tour { Name = "Tour 3", Description = "A relaxing vacation tour.", From = "Beach A", To = "Beach B", TransportType = "Car", Distance = 120.0, EstimatedTime = TimeSpan.Parse("02:00:00"), RouteInformation = "dasd" },
+                new Tour { Name = "Tour 4", Description = "A challenging running route.", From = "Park Entrance", To = "Park Exit", TransportType = "Run", Distance = 10.0, EstimatedTime = TimeSpan.Parse("01:00:00"), RouteInformation = "dasd" }
             };
 
             AddTourCommand = new RelayCommand(_ => OpenAddTourWindow());
@@ -46,11 +47,13 @@ namespace TourPlanner.ViewModels
 
         private void OpenAddTourWindow()
         {
-            var window = new AddTourWindow();
-            if (window.ShowDialog() == true)
+            var win = new AddTourWindow(newTour =>
             {
+                Tours.Add(newTour);
+                MessageBox.Show("Tour added!");
+            });
 
-            }
+            win.ShowDialog();
         }
 
         private void OpenDeleteTourWindow()

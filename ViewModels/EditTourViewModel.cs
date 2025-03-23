@@ -68,7 +68,7 @@ namespace TourPlanner.ViewModels
             set { _tour.Distance = value; OnPropertyChanged(nameof(Distance)); }
         }
 
-        public string EstimatedTime
+        public TimeSpan EstimatedTime
         {
             get => _tour.EstimatedTime;
             set { _tour.EstimatedTime = value; OnPropertyChanged(nameof(EstimatedTime)); }
