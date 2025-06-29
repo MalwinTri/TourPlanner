@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using TourPlanner.ViewModels;
 
 namespace TourPlanner
 {
@@ -11,8 +10,6 @@ namespace TourPlanner
         public MainWindow()
         {
             InitializeComponent();
-
-            DataContext = new MainWindowViewModel();
         }
 
     }

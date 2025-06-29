@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="TourPlanner.Views.TourMenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="200"
+             Background="AliceBlue">
+
+    <UserControl.Resources>
+        <!-- Icon resources -->
+        <BitmapImage x:Key="AddImage" UriSource="../Picture/Addimage.png" />
+        <BitmapImage x:Key="EditImage" UriSource="../Picture/Editimage.png" />
+        <BitmapImage x:Key="DeleteImage" UriSource="../Picture/Deleteimage.png" />
+
+        <!-- Unified Button Style -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#3399CC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0">
+            <!-- Header -->
+            <Border Background="#3399CC" CornerRadius="8" Padding="8" Margin="0 0 0 20">
+                <Label Content="Tour Menu" FontWeight="Bold" FontSize="16" Foreground="White" HorizontalAlignment="Center"/>
+            </Border>
+
+            <!-- Buttons -->
+            <Button Command="{Binding ShowAddTourDialog}">
+                <Image Source="{StaticResource AddImage}" Stretch="Uniform" Width="24" Height="24"/>
+            </Button>
+
+            <Button Command="{Binding ShowEditTourDialog}">
+                <Image Source="{StaticResource EditImage}" Stretch="Uniform" Width="24" Height="24"/>
+            </Button>
+
+            <Button Command="{Binding DeleteTour}">
+                <Image Source="{StaticResource DeleteImage}" Stretch="Uniform" Width="24" Height="24"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

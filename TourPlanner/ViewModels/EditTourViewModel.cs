@@ -1,158 +1,138 @@
-﻿using Microsoft.Win32;
-using System;
-using System.ComponentModel;
-using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using TourPlanner.Models;
+using TourPlanner.Logging;
 using TourPlanner.Models.TourPlanner.Models;
 
 namespace TourPlanner.ViewModels
 {
-    public class EditTourViewModel : INotifyPropertyChanged
+    public class EditTourViewModel : BaseViewModel
     {
-        private Tour _tour;
+        private readonly ILogger _logger;
 
-        public ICommand SaveCommand { get; }
-        public ICommand CancelCommand { get; }
-        public ICommand UploadImageCommand { get; }
+        private string? _name;
+        private string? _description;
+        private string? _from;
+        private string? _to;
+        private Tour? _tourToEdit;
 
-        private string _imagePath;
-        public string ImagePath
+        public event EventHandler<Tour>? TourEdited = null;
+        public event EventHandler? ValidationsFailed = null;
+
+        public ICommand EditTourCommand { get; }
+
+        public Tour? TourToEdit
         {
-            get => _imagePath;
+            get => _tourToEdit;
             set
             {
-                _imagePath = value;
-                OnPropertyChanged(nameof(ImagePath));
+                _tourToEdit = value;
+                if (_tourToEdit == null) return;
+                Name = _tourToEdit.Name;
+                Description = _tourToEdit.Description;
+                From = _tourToEdit.From;
+                To = _tourToEdit.To;
             }
         }
 
-        private BitmapImage _imagePreview;
-        public BitmapImage ImagePreview
+        public EditTourViewModel(ILoggerFactory loggerFactory)
         {
-            get => _imagePreview;
+            _logger = loggerFactory.CreateLogger<EditTourViewModel>();
+
+            EditTourCommand = new RelayCommand((_) =>
+            {
+                if (TourToEdit == null)
+                {
+                    _logger.Error("Tour to edit is null");
+                    NavigationService!.ShowMessageBox("Tour to edit is null", "Edit dialog error");
+                    return;
+                }
+                if (Transport == null)
+                {
+                    _logger.Error("Transport combobox item is null");
+                    NavigationService!.ShowMessageBox("Transport method not selected", "Edit dialog error");
+                    return;
+                }
+
+                if (!InputEditValidation(Name, Description, From, To, Transport!.Content.ToString()))
+                {
+                    ValidationsFailed?.Invoke(this, EventArgs.Empty);
+                    return;
+                }
+
+                TourToEdit.Name = Name;
+                TourToEdit.Description = Description;
+                TourToEdit.From = From;
+                TourToEdit.To = To;
+                TourToEdit.Transport = Transport.Content.ToString()!;
+                OnTourEdited(TourToEdit);
+
+                NavigationService!.Close();
+            }, (_) => true);
+        }
+
+        public string? Name
+        {
+            get => _name;
             set
             {
-                _imagePreview = value;
-                OnPropertyChanged(nameof(ImagePreview));
+                _name = value;
+                OnPropertyChanged();
             }
         }
 
-        public string Name
+        public string? Description
         {
-            get => _tour.Name;
-            set { _tour.Name = value; OnPropertyChanged(nameof(Name)); }
-        }
-
-        public string Description
-        {
-            get => _tour.Description;
-            set { _tour.Description = value; OnPropertyChanged(nameof(Description)); }
-        }
-
-        public string From
-        {
-            get => _tour.From;
-            set { _tour.From = value; OnPropertyChanged(nameof(From)); }
-        }
-
-        public string To
-        {
-            get => _tour.To;
-            set { _tour.To = value; OnPropertyChanged(nameof(To)); }
-        }
-
-        public double Distance
-        {
-            get => _tour.Distance;
-            set { _tour.Distance = value; OnPropertyChanged(nameof(Distance)); }
-        }
-
-        public TimeSpan EstimatedTime
-        {
-            get => _tour.EstimatedTime;
-            set { _tour.EstimatedTime = value; OnPropertyChanged(nameof(EstimatedTime)); }
-        }
-
-        public string RouteInformation
-        {
-            get => _tour.RouteInformation;
-            set { _tour.RouteInformation = value; OnPropertyChanged(nameof(RouteInformation)); }
-        }
-
-        public string TransportType
-        {
-            get => _tour.TransportType;
-            set { _tour.TransportType = value; OnPropertyChanged(nameof(TransportType)); }
-        }
-
-        public Tour EditedTour => _tour;
-
-        public EditTourViewModel(Tour tourToEdit)
-        {
-            _tour = new Tour
+            get => _description;
+            set
             {
-                Name = tourToEdit.Name,
-                Description = tourToEdit.Description,
-                From = tourToEdit.From,
-                To = tourToEdit.To,
-                Distance = tourToEdit.Distance,
-                EstimatedTime = tourToEdit.EstimatedTime,
-                RouteInformation = tourToEdit.RouteInformation,
-                TransportType = tourToEdit.TransportType,
-                ImagePath = tourToEdit.ImagePath
-            };
-
-            if (!string.IsNullOrEmpty(_tour.ImagePath))
-            {
-                ImagePath = _tour.ImagePath;
-                ImagePreview = new BitmapImage(new Uri(ImagePath));
-            }
-
-            SaveCommand = new RelayCommand(Save);
-            CancelCommand = new RelayCommand(Cancel);
-            UploadImageCommand = new RelayCommand(UploadImage);
-        }
-
-        private void UploadImage(object obj)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Filter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg"
-            };
-
-            if (openFileDialog.ShowDialog() == true)
-            {
-                ImagePath = openFileDialog.FileName;
-                ImagePreview = new BitmapImage(new Uri(ImagePath));
-                _tour.ImagePath = ImagePath;
+                _description = value;
+                OnPropertyChanged();
             }
         }
 
-
-        private void Save(object window)
+        public string? From
         {
-            if (window is Window w)
+            get => _from;
+            set
             {
-                w.DialogResult = true;
-                w.Close();
+                _from = value;
+                OnPropertyChanged();
             }
         }
 
-        private void Cancel(object window)
+        public string? To
         {
-            if (window is Window w)
+            get => _to;
+            set
             {
-                w.DialogResult = false;
-                w.Close();
+                _to = value;
+                OnPropertyChanged();
             }
         }
 
-        public Tour UpdatedTour => EditedTour;
+        public ComboBoxItem? Transport { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string name)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private void OnTourEdited(Tour tour)
+        {
+            TourEdited?.Invoke(this, tour);
+        }
+
+        private static bool InputEditValidation(string? name, string? description, string? from, string? to, string? transport)
+        {
+            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(description) || string.IsNullOrWhiteSpace(from) || string.IsNullOrWhiteSpace(to) || string.IsNullOrWhiteSpace(transport))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }

@@ -8,19 +8,15 @@ namespace TourPlanner.Models
 {
     public class TourLog
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
         public Guid? TourId { get; set; }
         public DateTime Date { get; set; }
         public string? Comment { get; set; }
         public double? Difficulty { get; set; }
-        public TimeSpan? TotalTime { get; set; }
+        public double? TotalTime { get; set; }
         public double? Rating { get; set; }
 
-        public double? TotalDistance { get; set; }
-
-        public TourLog() { }
-
-        public TourLog(Guid id, Guid? tourId, DateTime date, string? comment, double? difficulty, TimeSpan? totalTime, double? rating, double? totalDistance)
+        public TourLog(Guid id, Guid? tourId, DateTime date, string? comment, double? difficulty, double? totalTime, double? rating)
         {
             Id = id;
             TourId = tourId;
@@ -29,9 +25,6 @@ namespace TourPlanner.Models
             Difficulty = difficulty;
             TotalTime = totalTime;
             Rating = rating;
-            TotalDistance = totalDistance;
         }
     }
-
-
 }
