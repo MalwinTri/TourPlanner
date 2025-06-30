@@ -90,7 +90,7 @@
         </Grid>
 
         <!-- Busy Overlay -->
-        <Grid Background="#7FFFFFFF" Visibility="{Binding IsBusy, Converter={StaticResource VisibleIfTrueConverter}}">
+        <!--<Grid Background="#7FFFFFFF" Visibility="{Binding IsBusy, Converter={StaticResource VisibleIfTrueConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -107,7 +107,7 @@
                     <ProgressBar IsIndeterminate="True" Margin="5,0,5,5"/>
                 </StackPanel>
             </Border>
-        </Grid>
+        </Grid>-->
 
     </DockPanel>
 </Window>
