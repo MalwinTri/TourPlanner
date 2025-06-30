@@ -71,21 +71,21 @@
             </Grid.RowDefinitions>
 
             <!-- Search Bar -->
-            <views:SearchView Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3" Margin="0,0,0,10"/>
+            <views:SearchView Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3" Margin="0,0,0,10" x:Name="SearchView" />
 
             <!-- Left Menu -->
             <Border Grid.Row="1" Grid.Column="0" Background="#EAF6FF" CornerRadius="8" Padding="10">
-                <views:TourMenuView />
+                <views:TourMenuView x:Name="TourMenu" />
             </Border>
 
             <!-- Center Tour List -->
             <Border Grid.Row="1" Grid.Column="2" Background="White" BorderBrush="#D3D3D3" BorderThickness="1" CornerRadius="8" Padding="10">
-                <views:TourListView />
+                <views:TourListView x:Name="TourList" />
             </Border>
 
             <!-- Right Preview -->
             <Border Grid.Row="1" Grid.Column="4" Background="White" BorderBrush="#D3D3D3" BorderThickness="1" CornerRadius="8" Padding="10">
-                <views:TourPreviewView />
+                <views:TourPreviewView x:Name="TourPreview" />
             </Border>
         </Grid>
 

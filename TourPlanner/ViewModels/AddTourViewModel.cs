@@ -1,8 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
 using TourPlanner.Logging;
-using TourPlanner.Models.TourPlanner.Models;
-
+using TourPlanner.Models;
 
 namespace TourPlanner.ViewModels
 {
@@ -21,13 +20,13 @@ namespace TourPlanner.ViewModels
 
         public AddTourViewModel(ILoggerFactory loggerFactory)
         {
-            //_logger = loggerFactory.CreateLogger<AddTourViewModel>();
+            _logger = loggerFactory.CreateLogger<AddTourViewModel>();
 
             AddTourCommand = new RelayCommand((_) =>
             {
                 if (Transport == null)
                 {
-                    //_logger.Warning("Transport combobox item not selected");
+                    _logger.Warning("Transport combobox item not selected");
                     NavigationService!.ShowMessageBox("Transport method not selected", "Add dialog error");
                     return;
                 }
@@ -41,7 +40,7 @@ namespace TourPlanner.ViewModels
                 var tour = new Tour(Guid.NewGuid(), Name, Description, From, To, Transport.Content.ToString()!);
                 OnTourAdded(tour);
 
-                //_logger.Debug($"Tour added: {tour.Name}");
+                _logger.Debug($"Tour added: {tour.Name}");
                 NavigationService?.Close();
                 ClearInput();
             }, (_) => true);
@@ -98,11 +97,11 @@ namespace TourPlanner.ViewModels
         {
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(description) || string.IsNullOrWhiteSpace(from) || string.IsNullOrWhiteSpace(to) || string.IsNullOrWhiteSpace(transport))
             {
-                // _logger.Warning("Input validation failed");
+                _logger.Warning("Input validation failed");
                 return false;
             }
 
-            //_logger.Debug("Input validation passed");
+            _logger.Debug("Input validation passed");
             return true;
         }
 

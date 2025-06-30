@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TourPlanner.Logging;
-using TourPlanner.Models.TourPlanner.Models;
+using TourPlanner.Models;
 
 namespace TourPlanner.ViewModels
 {
