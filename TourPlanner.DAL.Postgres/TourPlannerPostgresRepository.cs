@@ -24,8 +24,8 @@ namespace TourPlanner.DAL.Postgres
             };
             _connectionString = stringBuilder.ConnectionString;
 
-            var context = new TourPlannerDbContext(_connectionString);
-            //context.Database.EnsureCreated();
+            using var context = new TourPlannerDbContext(_connectionString);
+            context.Database.EnsureCreated();
         }
     }
 }

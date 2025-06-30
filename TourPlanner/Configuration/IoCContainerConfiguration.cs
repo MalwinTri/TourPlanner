@@ -1,16 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TourPlanner;
+using TourPlanner.Configuration;
+using TourPlanner.DAL;
+using TourPlanner.DAL.Postgres;
 using TourPlanner.Logging.Log4Net;
 using TourPlanner.Navigation;
 using TourPlanner.ViewModels;
-using TourPlanner.DAL.Postgres;
-using TourPlanner.DAL;
-using ILoggerFactory = TourPlanner.Logging.ILoggerFactory;
 using TourPlanner.Views;
+using ILoggerFactory = TourPlanner.Logging.ILoggerFactory;
 
-
-namespace TourPlanner.Configuration
+namespace SWEN2_TourPlanner.Configuration
 {
     internal class IoCContainerConfiguration
     {
@@ -23,7 +23,7 @@ namespace TourPlanner.Configuration
         {
             var services = new ServiceCollection();
 
-            // Konfiguration laden
+            // Load appsettings.json
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
@@ -31,16 +31,17 @@ namespace TourPlanner.Configuration
             services.AddSingleton<IConfiguration>(configuration);
             services.AddSingleton<AppConfiguration>();
 
-            // PostgreSQL ConnectionString zusammenbauen
+            // Get connection string parts
             var postgresConfig = configuration.GetSection("postgres");
-            var connectionString =
-                $"{postgresConfig["connectionstring"]};Username={postgresConfig["username"]};Password={postgresConfig["password"]}";
+            var connectionString = postgresConfig["connectionstring"];
+            var username = postgresConfig["username"];
+            var password = postgresConfig["password"];
+            var fullConnectionString = $"{connectionString};Username={username};Password={password}";
 
-            // EF Core DbContext registrieren
-            services.AddDbContext<TourPlannerDbContext>(options =>
-                options.UseNpgsql(connectionString));
+            // Register custom DbContext
+            services.AddSingleton<TourPlannerDbContext>(sp =>
+                new TourPlannerDbContext(fullConnectionString));
 
-            // Konfigurations-Interfaces
             services.AddSingleton<ITourPlannerPostgresRepositoryConfiguration>(s => s.GetRequiredService<AppConfiguration>());
 
             // Logging

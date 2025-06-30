@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.Logging", "Tour
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.Logging.Log4Net", "TourPlanner.Logging.Log4Net\TourPlanner.Logging.Log4Net.csproj", "{E3E63B02-0EE9-43F7-900A-9AE9B1584C5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.Test", "TourPlanner.Test\TourPlanner.Test.csproj", "{2A4B124B-39BF-4575-BC94-90D0BC2762CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{E3E63B02-0EE9-43F7-900A-9AE9B1584C5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3E63B02-0EE9-43F7-900A-9AE9B1584C5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3E63B02-0EE9-43F7-900A-9AE9B1584C5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A4B124B-39BF-4575-BC94-90D0BC2762CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A4B124B-39BF-4575-BC94-90D0BC2762CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A4B124B-39BF-4575-BC94-90D0BC2762CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A4B124B-39BF-4575-BC94-90D0BC2762CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
