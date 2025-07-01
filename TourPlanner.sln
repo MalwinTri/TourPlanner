@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BL.Import", "To
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BL.iText", "TourPlanner.BL.iText\TourPlanner.BL.iText.csproj", "{A9EEC35F-40DC-4282-8908-FE9A7F5A8766}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BL.Mapquest", "TourPlanner.BL.Mapquest\TourPlanner.BL.Mapquest.csproj", "{520B68DC-2133-4010-A43C-FF3CD185FF90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{A9EEC35F-40DC-4282-8908-FE9A7F5A8766}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9EEC35F-40DC-4282-8908-FE9A7F5A8766}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9EEC35F-40DC-4282-8908-FE9A7F5A8766}.Release|Any CPU.Build.0 = Release|Any CPU
+		{520B68DC-2133-4010-A43C-FF3CD185FF90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{520B68DC-2133-4010-A43C-FF3CD185FF90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{520B68DC-2133-4010-A43C-FF3CD185FF90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{520B68DC-2133-4010-A43C-FF3CD185FF90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

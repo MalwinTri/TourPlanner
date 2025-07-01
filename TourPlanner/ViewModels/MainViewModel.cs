@@ -214,9 +214,6 @@ namespace TourPlanner.ViewModels
                 NavigationService?.NavigateTo(_tourDetailsViewModel);
             };
 
-
-
-
             ShowAddTourDialog = new RelayCommand((_) =>
             {
                 NavigationService?.NavigateTo(_addTourViewModel);
