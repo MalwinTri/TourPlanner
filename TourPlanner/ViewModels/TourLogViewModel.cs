@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using TourPlanner.Logging;
 using TourPlanner.Models;
+using TourPlanner.ViewModels.Commands;
 
 namespace TourPlanner.ViewModels
 {

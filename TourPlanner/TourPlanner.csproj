@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TourPlanner.BL\TourPlanner.BL.csproj" />
     <ProjectReference Include="..\TourPlanner.DAL.Postgres\TourPlanner.DAL.Postgres.csproj" />
     <ProjectReference Include="..\TourPlanner.Logging.Log4Net\TourPlanner.Logging.Log4Net.csproj" />
     <ProjectReference Include="..\TourPlanner.Models\TourPlanner.Models.csproj" />

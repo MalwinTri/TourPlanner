@@ -42,8 +42,6 @@ namespace TourPlanner.ViewModels
             }
         }
 
-
-
         public ObservableCollection<TourLog> TourLogs { get; } = new();
 
 
