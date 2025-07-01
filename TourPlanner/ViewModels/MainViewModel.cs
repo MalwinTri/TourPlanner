@@ -22,6 +22,7 @@ namespace TourPlanner.ViewModels
         public TourPreviewViewModel TourPreviewViewModel { get; }
         public SearchViewModel SearchViewModel { get; }
 
+
         private readonly ITourPlannerManager _tourManager;
         private readonly ITourPlannerLogManager _tourLogManager;
         private readonly IReportGenerator _reportGenerator;
@@ -63,6 +64,7 @@ namespace TourPlanner.ViewModels
             {
                 _isBusy = value;
                 OnPropertyChanged();
+                // otherwise CanExecute of command will not be re queried until there is some user interaction
                 CommandManager.InvalidateRequerySuggested();
             }
         }
@@ -82,7 +84,8 @@ namespace TourPlanner.ViewModels
         public MainViewModel(AddTourViewModel? addTourViewModel, EditTourViewModel? editTourViewModel,
             TourListViewModel tourListViewModel, TourPreviewViewModel tourPreviewViewModel,
             TourLogViewModel tourLogViewModel, SearchViewModel searchViewModel, ITourPlannerManager tourManager, ITourPlannerLogManager tourLogManager,
-            IReportGenerator reportGenerator, IExportManager exportManager, IImportManager importManager, ILoggerFactory loggerFactory)
+            IReportGenerator reportGenerator, IExportManager exportManager, IImportManager importManager, ILoggerFactory loggerFactory,
+            IWeatherGenerator weatherGenerator)
         {
             _logger = loggerFactory.CreateLogger<MainViewModel>();
 
@@ -126,6 +129,13 @@ namespace TourPlanner.ViewModels
                     NavigationService?.ShowMessageBox("Tour could not be added", "Error");
                     IsBusy = false;
                 }
+                catch (MapquestReturnedNullException e)
+                {
+                    _logger.Error("Tour could not be retrieved from mapquest");
+                    _logger.Error(e.Message);
+                    NavigationService?.ShowMessageBox("Tour could not be retrieved from mapquest", "Error");
+                    IsBusy = false;
+                }
             };
 
             _addTourViewModel.ValidationsFailed += (_, errors) =>
@@ -161,6 +171,14 @@ namespace TourPlanner.ViewModels
                     NavigationService?.ShowMessageBox("Tour could not be added", "Error");
                     IsBusy = false;
                 }
+                catch (MapquestReturnedNullException e)
+                {
+                    _logger.Error("Tour could not be retrieved from mapquest");
+                    _logger.Error(e.Message);
+                    NavigationService?.ShowMessageBox("Tour could not be retrieved from mapquest", "Error");
+                    IsBusy = false;
+                }
+
             };
 
             _editTourViewModel.ValidationsFailed += (_, errors) =>
@@ -209,10 +227,13 @@ namespace TourPlanner.ViewModels
 
             TourPreviewViewModel.TourDetailsOpened += (_, tour) =>
             {
-                //_tourDetailsViewModel = new TourDetailsViewModel(loggerFactory, tourLogManager, tour, tourManager);
+                _tourDetailsViewModel = new TourDetailsViewModel(loggerFactory, tourLogManager, weatherGenerator, tour, tourManager);
 
                 NavigationService?.NavigateTo(_tourDetailsViewModel);
             };
+
+
+
 
             ShowAddTourDialog = new RelayCommand((_) =>
             {

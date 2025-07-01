@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BL.iText", "Tou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BL.Mapquest", "TourPlanner.BL.Mapquest\TourPlanner.BL.Mapquest.csproj", "{520B68DC-2133-4010-A43C-FF3CD185FF90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BL.WeatherAPI", "TourPlanner.BL.WeatherAPI\TourPlanner.BL.WeatherAPI.csproj", "{F7406E0D-39ED-4E3A-A4A7-7031FC39036D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{520B68DC-2133-4010-A43C-FF3CD185FF90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{520B68DC-2133-4010-A43C-FF3CD185FF90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{520B68DC-2133-4010-A43C-FF3CD185FF90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7406E0D-39ED-4E3A-A4A7-7031FC39036D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7406E0D-39ED-4E3A-A4A7-7031FC39036D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7406E0D-39ED-4E3A-A4A7-7031FC39036D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7406E0D-39ED-4E3A-A4A7-7031FC39036D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
