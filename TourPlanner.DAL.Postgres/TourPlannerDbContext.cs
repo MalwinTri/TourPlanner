@@ -27,8 +27,8 @@ namespace TourPlanner.DAL.Postgres
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Tour>().HasKey(t => t.Id);
-            modelBuilder.Entity<TourLog>().HasKey(tl => tl.Id);
+            modelBuilder.Entity<Tour>().ToTable("tours").HasKey(t => t.Id);
+            modelBuilder.Entity<TourLog>().ToTable("tourlogs").HasKey(tl => tl.Id);
 
         }
     }

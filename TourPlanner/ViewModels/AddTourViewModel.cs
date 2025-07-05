@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
 using TourPlanner.Logging;
 using TourPlanner.Models;
@@ -26,10 +25,8 @@ namespace TourPlanner.ViewModels
 
             AddTourCommand = new RelayCommand((_) =>
             {
-                MessageBox.Show("Button funktioniert!");
                 if (Transport == null)
                 {
-                    MessageBox.Show("Button funktioniert!");
                     _logger.Warning("Transport combobox item not selected");
                     NavigationService!.ShowMessageBox("Transport method not selected", "Add dialog error");
                     return;
@@ -37,7 +34,6 @@ namespace TourPlanner.ViewModels
 
                 if (!InputAddValidation(Name, Description, From, To, Transport!.Content.ToString()))
                 {
-                    MessageBox.Show("Button funktioniert!");
                     ValidationsFailed?.Invoke(this, EventArgs.Empty);
                     return;
                 }
@@ -45,7 +41,6 @@ namespace TourPlanner.ViewModels
                 var tour = new Tour(Guid.NewGuid(), Name, Description, From, To, Transport.Content.ToString()!);
                 OnTourAdded(tour);
 
-                MessageBox.Show("Button funktioniert!");
                 _logger.Debug($"Tour added: {tour.Name}");
                 NavigationService?.Close();
                 ClearInput();

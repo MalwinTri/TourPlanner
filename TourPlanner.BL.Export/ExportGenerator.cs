@@ -4,7 +4,7 @@ using TourPlanner.Models;
 
 namespace TourPlanner.BL.Export
 {
-    public class ExportGenerator : IExportConfiguration
+    public class ExportGenerator : IExportManager
     {
         private readonly ILogger _logger;
         private readonly string _exportPath;
@@ -15,8 +15,6 @@ namespace TourPlanner.BL.Export
             _exportPath = configuration.ExportPath;
             _logger.Debug("Export generator created");
         }
-
-        public string ExportPath => throw new NotImplementedException();
 
         public async Task<bool> ExportTour(Tour tour, IEnumerable<TourLog> tourLogs)
         {
@@ -30,7 +28,7 @@ namespace TourPlanner.BL.Export
 
                 var tourPath = Path.Combine(_exportPath, $"{tour.Name}.json");
                 var jsonObject = new { tour, tourLogs };
-                var json = JsonConvert.SerializeObject(jsonObject, Newtonsoft.Json.Formatting.Indented);
+                var json = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
                 await File.WriteAllTextAsync(tourPath, json);
 
                 return true;
@@ -40,6 +38,7 @@ namespace TourPlanner.BL.Export
                 _logger.Error(e.Message);
                 throw;
             }
+
         }
     }
 }

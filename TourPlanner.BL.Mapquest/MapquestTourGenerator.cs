@@ -6,9 +6,8 @@ using TourPlanner.BL.Exceptions;
 using TourPlanner.BL.Mapquest.DTO;
 using TourPlanner.Logging;
 using TourPlanner.Models;
-using System.Drawing;
 using System.Drawing.Imaging;
-using static System.Net.Mime.MediaTypeNames;
+using System.Drawing;
 
 namespace TourPlanner.BL.Mapquest
 {
@@ -115,22 +114,19 @@ namespace TourPlanner.BL.Mapquest
 
                 _logger.Debug($"Mapquest returned image stream");
 
-                var image = System.Drawing.Image.FromStream(imageStream);
-                if (File.Exists(_imagePath + $"{tour.Name}.Jpeg"))
-                {
-                    File.Delete(_imagePath + $"{tour.Name}.Jpeg");
-                }
-                image.Save(_imagePath + $"{tour.Name}.Jpeg", ImageFormat.Jpeg);
-                tour.ImagePath = _imagePath + $"{tour.Name}.Jpeg";
+                var image = Image.FromStream(imageStream);
+                var safeName = string.Concat(tour.Name.Split(Path.GetInvalidFileNameChars()));
+                var filePath = Path.Combine(Path.GetFullPath(_imagePath), $"{safeName}.Jpeg");
+                image.Save(filePath, ImageFormat.Jpeg);
+                tour.ImagePath = "file:///" + filePath.Replace("\\", "/");
 
-                _logger.Debug($"Mapquest image saved to {_imagePath + $"{tour.Name}.Jpeg"}");
+                _logger.Debug($"Mapquest image saved to {filePath}");
 
                 return true;
             }
             catch (Exception e)
             {
-                
-                Console.WriteLine(e);
+                _logger.Error("Image.Save failed: " + e.Message);
                 throw;
             }
         }

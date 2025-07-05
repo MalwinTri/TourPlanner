@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using log4net;
-using log4net.Config;
-using log4net.Repository;
-
-
-namespace TourPlanner.Logging.Log4Net
+﻿namespace TourPlanner.Logging.Log4Net
 {
     public class Log4NetFactory : ILoggerFactory
     {

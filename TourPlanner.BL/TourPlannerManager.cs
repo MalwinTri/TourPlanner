@@ -1,4 +1,5 @@
 ﻿using TourPlanner.BL.Enum;
+using TourPlanner.BL.Exceptions;
 using TourPlanner.DAL;
 using TourPlanner.Logging;
 using TourPlanner.Models;
@@ -118,8 +119,7 @@ namespace TourPlanner.BL
             catch (Exception e)
             {
                 _logger.Error(e.Message);
-                //throw new TourPlannerManagerException("CalculateChildFriendliness error", e);
-                throw new Exception("CalculateChildFriendliness error", e);
+                throw new TourPlannerManagerException("CalculateChildFriendliness error", e);
             }
 
         }
@@ -144,8 +144,7 @@ namespace TourPlanner.BL
             catch (Exception e)
             {
                 _logger.Error(e.Message);
-                //throw new TourPlannerManagerException("CalculatePopularity error", e);
-                throw new Exception("CalculatePopularity error", e);
+                throw new TourPlannerManagerException("CalculatePopularity error", e);
             }
         }
 
