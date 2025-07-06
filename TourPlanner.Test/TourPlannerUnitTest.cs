@@ -240,5 +240,32 @@ namespace TourPlanner.Test
             var result = generator.GenerateSummary();
             Assert.IsTrue(Directory.Exists(tempDir));
         }
+        [Test]
+        public void Edit_Tour_ReturnsNull_IfNotExists()
+        {
+            var t = new Tour(Guid.NewGuid(), "NichtDa", "x", "x", "x", "car");
+            Assert.IsNull(_repo.Edit(t));
+        }
+
+        [Test]
+        public void Edit_TourLog_ReturnsNull_IfNotExists()
+        {
+            var l = new TourLog(Guid.NewGuid(), Guid.NewGuid(), DateTime.Now, "x", 1, 1, 1);
+            Assert.IsNull(_repo.Edit(l));
+        }
+
+        [Test]
+        public void Remove_Tour_ReturnsFalse_IfNotExists()
+        {
+            var t = new Tour(Guid.NewGuid(), "NichtDa", "x", "x", "x", "car");
+            Assert.IsFalse(_repo.Remove(t));
+        }
+
+        [Test]
+        public void Remove_TourLog_ReturnsFalse_IfNotExists()
+        {
+            var l = new TourLog(Guid.NewGuid(), Guid.NewGuid(), DateTime.Now, "x", 1, 1, 1);
+            Assert.IsFalse(_repo.Remove(l));
+        }
     }
 }
