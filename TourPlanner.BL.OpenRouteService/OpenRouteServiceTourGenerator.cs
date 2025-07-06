@@ -1,13 +1,13 @@
-﻿using System.Runtime.Versioning;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
+using System.Net.Http.Headers;
+using System.Runtime.Versioning;
 using System.Text.Json;
 using TourPlanner.BL.Exceptions;
+using TourPlanner.BL.OpenRouteService.DTO;
 using TourPlanner.Logging;
 using TourPlanner.Models;
-using System.Drawing.Imaging;
-using System.Drawing;
-using System.Net.Http.Headers;
-using TourPlanner.BL.OpenRouteService.DTO;
-using System.Globalization;
 
 namespace TourPlanner.BL.OpenRouteService
 {
@@ -38,8 +38,19 @@ namespace TourPlanner.BL.OpenRouteService
 
             try
             {
+                if (string.IsNullOrWhiteSpace(tour.From) || string.IsNullOrWhiteSpace(tour.To))
+                {
+                    _logger.Error("Tour.From or Tour.To is null or empty.");
+                    throw new OpenRouteServicemanagerException("Start or destination location is missing.");
+                }
+
+                _logger.Warning($"[Start] Generating tour: {tour.Name} ({tour.From} → {tour.To})");
+
                 tour.StartCoordinates = await GetCoordinatesAsync(tour.From!);
+                _logger.Debug($"[Coordinates] From '{tour.From}' → {string.Join(", ", tour.StartCoordinates)}");
+
                 tour.EndCoordinates = await GetCoordinatesAsync(tour.To!);
+                _logger.Debug($"[Coordinates] To   '{tour.To}' → {string.Join(", ", tour.EndCoordinates)}");
 
                 var requestBody = new
                 {
@@ -47,6 +58,8 @@ namespace TourPlanner.BL.OpenRouteService
                 };
 
                 var requestJson = JsonSerializer.Serialize(requestBody);
+                _logger.Debug($"[Request JSON] {requestJson}");
+
                 var request = new HttpRequestMessage(HttpMethod.Post, "v2/directions/driving-car")
                 {
                     Content = new StringContent(requestJson)
@@ -55,34 +68,45 @@ namespace TourPlanner.BL.OpenRouteService
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
                 request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-                _logger.Debug($"Sending directions request: {requestJson}");
+                _logger.Warning("[HTTP] Sending directions request...");
 
                 var response = await _httpClient.SendAsync(request);
                 await EnsureSuccessOrThrow(response, "Directions API");
 
                 var responseJson = await response.Content.ReadAsStringAsync();
+                _logger.Debug($"[HTTP Response JSON] {responseJson}");
 
                 var routeResponse = JsonSerializer.Deserialize<ORSRouteResponse>(responseJson);
 
-                _logger.Debug("Deserialized routeResponse: " + JsonSerializer.Serialize(routeResponse));
+                if (routeResponse == null || routeResponse.Routes == null)
+                {
+                    _logger.Error("[Deserialization] ORSRouteResponse is null.");
+                    throw new OpenRouteServicemanagerException("Failed to parse directions response.");
+                }
 
-                var summary = routeResponse?.Routes?.FirstOrDefault()?.Summary;
+                var summary = routeResponse.Routes.FirstOrDefault()?.Summary;
+
                 if (summary == null)
+                {
+                    _logger.Error("[ORS] No summary in response.");
                     throw new OpenRouteServicemanagerException("ORS response contains no route summary.");
+                }
 
                 tour.Distance = summary.Distance / 1000.0;
                 tour.Time = summary.Duration / 60.0;
 
-                await LoadImage(tour);
-                _logger.Debug("Tour created successfully.");
+                _logger.Warning($"[Result] Distance: {tour.Distance} km, Time: {tour.Time} min");
 
+                var imageSuccess = await LoadImage(tour);
+                if (!imageSuccess)
+                {
+                    _logger.Warning("[Image] Map image could not be downloaded.");
+                }
+
+                _logger.Warning("[Success] Tour generated successfully.");
+                _logger.Warning($"[Tour Result] ImagePath: {tour.ImagePath}");
                 return tour;
             }
-            //catch (Exception ex) when (ex is not OpenRouteServicemanagerException)
-            //{
-            //    _logger.Error($"Unexpected error: {ex.Message}");
-            //    throw new OpenRouteServicemanagerException("Unexpected error during tour generation.", ex);
-            //}
             catch (Exception ex)
             {
                 _logger.Error("=== ERROR in GenerateTourFromTourAsync ===");
@@ -92,8 +116,8 @@ namespace TourPlanner.BL.OpenRouteService
 
                 throw new OpenRouteServicemanagerException("Tour could not be retrieved from OpenRouteService", ex);
             }
-
         }
+
 
         private async Task<List<double>> GetCoordinatesAsync(string location)
         {
@@ -128,8 +152,6 @@ namespace TourPlanner.BL.OpenRouteService
 
             return coordinates;
         }
-
-
         private async Task EnsureSuccessOrThrow(HttpResponseMessage response, string context)
         {
             if (!response.IsSuccessStatusCode)
@@ -153,34 +175,39 @@ namespace TourPlanner.BL.OpenRouteService
         {
             try
             {
-                var startLat = tour.StartCoordinates[1].ToString(CultureInfo.InvariantCulture);
-                var startLon = tour.StartCoordinates[0].ToString(CultureInfo.InvariantCulture);
-                var endLat = tour.EndCoordinates[1].ToString(CultureInfo.InvariantCulture);
-                var endLon = tour.EndCoordinates[0].ToString(CultureInfo.InvariantCulture);
+                Stream imageStream;
+                if (sessionId == null)
+                {
+                    var start =
+                        $"{tour.StartCoordinates[0].ToString(CultureInfo.InvariantCulture)},{tour.StartCoordinates[1].ToString(CultureInfo.InvariantCulture)}";
+                    var end = $"{tour.EndCoordinates[0].ToString(CultureInfo.InvariantCulture)},{tour.EndCoordinates[1].ToString(CultureInfo.InvariantCulture)}";
 
-                var imageUrl =
-                    $"https://staticmap.openstreetmap.de/staticmap.php?" +
-                    $"center={startLat},{startLon}" +
-                    $"&zoom=8&size=600x400" +
-                    $"&markers={startLat},{startLon},red-pushpin" +
-                    $"|{endLat},{endLon},blue-pushpin";
+                    imageStream = await _httpClient.GetStreamAsync($"staticmap/v5/map?key={_apiKey}&start={start}&end={end}&size=600,400@2x");
+                }
+                else
+                {
+                    imageStream = await _httpClient.GetStreamAsync($"staticmap/v5/map?key={_apiKey}&session={sessionId}&size=600,400@2x");
+                }
 
-                var safeName = string.Concat(tour.Name.Split(Path.GetInvalidFileNameChars()));
-                var filePath = Path.Combine(Path.GetFullPath(_imagePath), $"{safeName}.jpeg");
+                _logger.Debug($"Mapquest returned image stream");
 
-                using var imageStream = await _httpClient.GetStreamAsync(imageUrl);
-                using var fileStream = File.Create(filePath);
-                await imageStream.CopyToAsync(fileStream);
+                var image = Image.FromStream(imageStream);
+                if (File.Exists(_imagePath + $"{tour.Name}.Jpeg"))
+                {
+                    File.Delete(_imagePath + $"{tour.Name}.Jpeg");
+                }
+                image.Save(_imagePath + $"{tour.Name}.Jpeg", ImageFormat.Jpeg);
+                tour.ImagePath = _imagePath + $"{tour.Name}.Jpeg";
 
-                tour.ImagePath = filePath;
+                _logger.Debug($"Mapquest image saved to {_imagePath + $"{tour.Name}.Jpeg"}");
 
-                _logger.Debug($"Image saved to: {filePath}");
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                _logger.Error("Image download failed: " + ex.Message);
-                return false;
+
+                Console.WriteLine(e);
+                throw;
             }
         }
     }
