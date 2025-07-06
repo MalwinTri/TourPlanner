@@ -126,7 +126,7 @@ namespace TourPlanner.BL.iText
 
                 var div = new Div().SetKeepTogether(true);
 
-                var imageHeader = new Paragraph("Mapquest route")
+                var imageHeader = new Paragraph("OpenRouteService route")
                     .SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA))
                     .SetFontSize(14)
                     .SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD))

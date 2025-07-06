@@ -34,11 +34,8 @@ namespace TourPlanner.BL.Import
                 // Deserialize the JSON into objects
                 var deserializedObject = JsonConvert.DeserializeObject<dynamic>(json);
 
-
                 if (deserializedObject == null)
                 {
-                    //todo throw custom exception
-
                     _logger.Error("Deserialized object is null");
                     throw new ImportReturnedNullException("Deserialized object is null");
                 }
@@ -62,7 +59,6 @@ namespace TourPlanner.BL.Import
 
                 List<TourLog> tourLogObject = deserializedObject.tourLogs.ToObject<List<TourLog>>();
 
-
                 tourLogObject ??= new List<TourLog>();
 
                 foreach (var tourLog in tourLogObject)
@@ -70,27 +66,24 @@ namespace TourPlanner.BL.Import
                     _tourLogManager.Add(tourLog);
                 }
 
-
-
                 return tourObject;
             }
-            catch
+            catch (OpenRouteServicemanagerException e)
             {
-                throw new Exception();
+                _logger.Error("OpenRouteService error");
+                if (e.InnerException != null)
+                {
+                    throw new ImportReturnedNullException("OpenRouteService error", e.InnerException);
+                }
+                else
+                {
+                    throw new ImportReturnedNullException("OpenRouteService error", e);
+                }
             }
-            //catch (MapquestReturnedNullException e)
-            //{
-            //    _logger.Error("Mapquest error");
-            //    if (e.InnerException != null)
-            //    {
-            //        throw new ImportReturnedNullException("Mapquest error", e.InnerException);
-            //    }
-            //    else
-            //    {
-            //        throw new ImportReturnedNullException("Mapquest error", e);
-            //    }
-            //}
-
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

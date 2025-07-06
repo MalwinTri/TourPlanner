@@ -33,7 +33,7 @@
     <ProjectReference Include="..\TourPlanner.BL.Export\TourPlanner.BL.Export.csproj" />
     <ProjectReference Include="..\TourPlanner.BL.Import\TourPlanner.BL.Import.csproj" />
     <ProjectReference Include="..\TourPlanner.BL.iText\TourPlanner.BL.iText.csproj" />
-    <ProjectReference Include="..\TourPlanner.BL.Mapquest\TourPlanner.BL.Mapquest.csproj" />
+    <ProjectReference Include="..\TourPlanner.BL.OpenRouteService\TourPlanner.BL.OpenRouteService.csproj" />
     <ProjectReference Include="..\TourPlanner.BL.WeatherAPI\TourPlanner.BL.WeatherAPI.csproj" />
     <ProjectReference Include="..\TourPlanner.BL\TourPlanner.BL.csproj" />
     <ProjectReference Include="..\TourPlanner.DAL.Postgres\TourPlanner.DAL.Postgres.csproj" />

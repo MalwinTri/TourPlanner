@@ -4,7 +4,7 @@ using TourPlanner.BL;
 using TourPlanner.BL.Export;
 using TourPlanner.BL.Import;
 using TourPlanner.BL.iText;
-using TourPlanner.BL.Mapquest;
+using TourPlanner.BL.OpenRouteService;
 using TourPlanner.BL.WeatherAPI;
 using TourPlanner.DAL;
 using TourPlanner.DAL.Postgres;
@@ -36,7 +36,7 @@ namespace TourPlanner.Configuration
 
 
             services.AddSingleton<ITourPlannerPostgresRepositoryConfiguration>(s => s.GetRequiredService<AppConfiguration>());
-            services.AddSingleton<IMapquestConfiguration>(s => s.GetRequiredService<AppConfiguration>());
+            services.AddSingleton<IOpenRouteServiceConfiguration>(s => s.GetRequiredService<AppConfiguration>());
             services.AddSingleton<IItextConfiguration>(s => s.GetRequiredService<AppConfiguration>());
             services.AddSingleton<IWeatherApiConfiguration>(s => s.GetRequiredService<AppConfiguration>());
             services.AddSingleton<IExportConfiguration>(s => s.GetRequiredService<AppConfiguration>());
@@ -45,7 +45,7 @@ namespace TourPlanner.Configuration
 
             services.AddSingleton<ITourPlannerRepository, TourPlannerPostgresRepository>();
 
-            services.AddSingleton<ITourPlannerGenerator, MapquestTourGenerator>();
+            services.AddSingleton<ITourPlannerGenerator, OpenRouteServiceTourGenerator>();
             services.AddSingleton<ITourPlannerManager, TourPlannerManager>();
             services.AddSingleton<ITourPlannerLogManager, TourPlannerLogManager>();
             services.AddSingleton<IReportGenerator, iTextReportGenerator>();

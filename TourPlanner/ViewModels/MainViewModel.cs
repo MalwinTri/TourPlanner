@@ -129,11 +129,11 @@ namespace TourPlanner.ViewModels
                     NavigationService?.ShowMessageBox("Tour could not be added", "Error");
                     IsBusy = false;
                 }
-                catch (MapquestReturnedNullException e)
+                catch (OpenRouteServicemanagerException e)
                 {
-                    _logger.Error("Tour could not be retrieved from mapquest");
+                    _logger.Error("Tour could not be retrieved from OpenRouteService");
                     _logger.Error(e.Message);
-                    NavigationService?.ShowMessageBox("Tour could not be retrieved from mapquest", "Error");
+                    NavigationService?.ShowMessageBox("Tour could not be retrieved from OpenRouteService", "Error");
                     IsBusy = false;
                 }
             };
@@ -171,11 +171,11 @@ namespace TourPlanner.ViewModels
                     NavigationService?.ShowMessageBox("Tour could not be added", "Error");
                     IsBusy = false;
                 }
-                catch (MapquestReturnedNullException e)
+                catch (OpenRouteServicemanagerException e)
                 {
-                    _logger.Error("Tour could not be retrieved from mapquest");
+                    _logger.Error("Tour could not be retrieved from OpenRouteService");
                     _logger.Error(e.Message);
-                    NavigationService?.ShowMessageBox("Tour could not be retrieved from mapquest", "Error");
+                    NavigationService?.ShowMessageBox("Tour could not be retrieved from OpenRouteService", "Error");
                     IsBusy = false;
                 }
 
