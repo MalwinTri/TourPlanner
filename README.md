@@ -84,7 +84,33 @@ Wireframes and screenshots of these views are included in the documentation fold
 - **Singleton Pattern:** Ensures only one instance of certain classes exists.
 
 ## Unit Testing Decisions
-Unit tests were written using NUnit to cover business logic, data access, validation, search, and computed attributes. The goal was to achieve high test coverage and ensure reliability. At least 20 unit tests were implemented, focusing on critical application logic and edge cases.
+
+To ensure the reliability and correctness of our application, we implemented comprehensive unit tests using the **NUnit** framework. Our testing strategy focused on the following key areas:
+
+- **Repository Layer:**
+  - Tested all CRUD operations for tours and tour logs (add, edit, remove).
+  - Verified that repository methods return expected results and handle data correctly.
+
+- **Search Functionality:**
+  - Tested searching tours and tour logs by text.
+  - Ensured full-text search returns correct filtered results based on user queries.
+
+- **Report Generation:**
+  - Verified that PDF reports and summaries are created successfully by the iText report generator.
+  - Checked that reports are generated with correct data and that directories are created if they do not exist.
+  - Ensured the generator handles cases where no logs are found.
+
+- **Error Handling:**
+  - Deliberately triggered exceptions in report generation to ensure errors are properly logged and do not crash the application.
+
+- **Edge Cases:**
+  - Included tests for empty log lists, missing directories, and exception handling to ensure robustness.
+
+- **Test Coverage:**
+  - Covered all critical business logic, data access, and reporting features.
+  - Implemented more than 20 unit tests, focusing on both typical and exceptional workflows.
+
+This approach helped us to identify and fix issues early in the development process, resulting in a more stable and maintainable application.
 
 
 
