@@ -1,0 +1,39 @@
+﻿using System.Windows.Input;
+using TourPlanner.ViewModels.Commands;
+
+namespace TourPlanner.ViewModels
+{
+    public class SearchViewModel : BaseViewModel
+    {
+        public event EventHandler<string?>? SearchTextChanged;
+
+        public ICommand SearchCommand { get; }
+
+        public ICommand ClearCommand { get; }
+
+        private string? searchText;
+        public string? SearchText
+        {
+            get => searchText;
+            set
+            {
+                searchText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public SearchViewModel()
+        {
+            SearchCommand = new RelayCommand((_) =>
+            {
+                SearchTextChanged?.Invoke(this, SearchText);
+            });
+
+            ClearCommand = new RelayCommand((_) =>
+            {
+                SearchText = "";
+                SearchTextChanged?.Invoke(this, SearchText);
+            });
+        }
+    }
+}

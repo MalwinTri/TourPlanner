@@ -1,0 +1,82 @@
+﻿<Window x:Class="TourPlanner.Views.TourLogDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TourPlanner.Views"
+        mc:Ignorable="d"
+        Title="{Binding Usecase}" Height="500" Width="500"
+        Background="AliceBlue">
+
+    <Window.Resources>
+        <!-- Einheitlicher Button-Stil -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#3399CC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10 5"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Einheitlicher Textbox-Stil -->
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+
+        <!-- Einheitlicher ComboBox-Stil -->
+        <Style TargetType="ComboBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <StackPanel>
+            <!-- Header -->
+            <TextBlock Text="{Binding Usecase}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+
+            <!-- Date -->
+            <TextBlock Text="Date:" FontWeight="SemiBold"/>
+            <DatePicker SelectedDate="{Binding Date}" Margin="10,0"/>
+
+            <!-- Comment -->
+            <TextBlock Text="Comment:" FontWeight="SemiBold"/>
+            <TextBox Text="{Binding Comment}"/>
+
+            <!-- Difficulty -->
+            <TextBlock Text="Difficulty:" FontWeight="SemiBold"/>
+            <ComboBox SelectedValue="{Binding Difficulty}">
+                <ComboBoxItem Content="Easy"/>
+                <ComboBoxItem Content="Medium"/>
+                <ComboBoxItem Content="Hard"/>
+            </ComboBox>
+
+            <!-- Total Time -->
+            <TextBlock Text="Total Time (HH:MM:SS):" FontWeight="SemiBold"/>
+            <TextBox Text="{Binding TotalTime}"/>
+
+            <!-- Rating -->
+            <TextBlock Text="Rating:" FontWeight="SemiBold"/>
+            <ComboBox SelectedValue="{Binding Rating}">
+                <ComboBoxItem Content="Poor"/>
+                <ComboBoxItem Content="Fair"/>
+                <ComboBoxItem Content="Good"/>
+                <ComboBoxItem Content="Very Good"/>
+                <ComboBoxItem Content="Excellent"/>
+            </ComboBox>
+
+            <!-- Action Button -->
+            <Button Content="{Binding Usecase}" Command="{Binding TourLogCommand}" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>

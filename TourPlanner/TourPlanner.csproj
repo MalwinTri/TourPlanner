@@ -9,7 +9,61 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="appsettings.json" />
+    <None Remove="Picture\Addimage.png" />
+    <None Remove="Picture\Deleteimage.png" />
+    <None Remove="Picture\Editimage.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TourPlanner.BL.Export\TourPlanner.BL.Export.csproj" />
+    <ProjectReference Include="..\TourPlanner.BL.Import\TourPlanner.BL.Import.csproj" />
+    <ProjectReference Include="..\TourPlanner.BL.iText\TourPlanner.BL.iText.csproj" />
+    <ProjectReference Include="..\TourPlanner.BL.OpenRouteService\TourPlanner.BL.OpenRouteService.csproj" />
+    <ProjectReference Include="..\TourPlanner.BL.WeatherAPI\TourPlanner.BL.WeatherAPI.csproj" />
+    <ProjectReference Include="..\TourPlanner.BL\TourPlanner.BL.csproj" />
+    <ProjectReference Include="..\TourPlanner.DAL.Postgres\TourPlanner.DAL.Postgres.csproj" />
+    <ProjectReference Include="..\TourPlanner.Logging.Log4Net\TourPlanner.Logging.Log4Net.csproj" />
     <ProjectReference Include="..\TourPlanner.Models\TourPlanner.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Picture\Addimage.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Picture\Deleteimage.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Picture\Editimage.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="apikeys.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="log4net.conf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="images\" />
   </ItemGroup>
 
 </Project>

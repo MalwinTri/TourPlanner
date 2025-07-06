@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="TourPlanner.Views.AddTourLogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TourPlanner.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="5,0,20,0"></Setter>
+            <Setter Property="FontSize" Value="14"></Setter>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="5,0,20,0"></Setter>
+            <Setter Property="FontSize" Value="14"></Setter>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="10,0,0,0"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Background" Value="#58729e"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#58729e"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Width" Value="100"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Margin="{TemplateBinding Padding}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <ItemsControl>
+            <StackPanel>
+                <Label Content="Add Tour Log" FontSize="24" FontWeight="Bold" Foreground="#58729e" HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="Date:" FontSize="14"/>
+                <DatePicker x:Name="DatePicker" SelectedDate="{Binding Date}" Margin="5,0, 21, 0"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="Difficulty:" FontSize="14"/>
+                <ComboBox x:Name="DifficultyTypeComboBox" SelectedValue="{Binding Difficulty}">
+                    <ComboBoxItem Name="Easy">Easy</ComboBoxItem>
+                    <ComboBoxItem Name="Medium">Medium</ComboBoxItem>
+                    <ComboBoxItem Name="Hard">Hard</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="Total Time (format: HH:MM:SS):" FontSize="14"/>
+                <TextBox x:Name="TotalTimeTextBox" Text="{Binding TotalTime}"/>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="Rating:" FontSize="14"/>
+                <ComboBox x:Name="RatingTypeComboBox" SelectedValue="{Binding Rating}">
+                    <ComboBoxItem Name="Poor">Poor</ComboBoxItem>
+                    <ComboBoxItem Name="Fair">Fair</ComboBoxItem>
+                    <ComboBoxItem Name="Good">Good</ComboBoxItem>
+                    <ComboBoxItem Name="VeryGood">Very good</ComboBoxItem>
+                    <ComboBoxItem Name="Excellent">Excellent</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel>
+                <Label Content="Comment:" FontSize="14"/>
+                <ScrollViewer VerticalScrollBarVisibility="Visible" Height="80" Margin="0,0,5,0">
+                    <TextBox x:Name="CommentTextBox" Text="{Binding Comment}" AcceptsReturn="True" VerticalAlignment="Stretch" Margin="5,0,0,0"/>
+                </ScrollViewer>
+            </StackPanel>
+            <StackPanel>
+                <Button Content="Add Tour Log" Command="{Binding AddTourLogCommand}" HorizontalAlignment="Center" Margin="10"/>
+            </StackPanel>
+        </ItemsControl>
+    </Grid>
+</UserControl>
