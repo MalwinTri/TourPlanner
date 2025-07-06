@@ -19,12 +19,15 @@ This layered approach ensures a clear separation of concerns between presentatio
 ### MVVM UML
 ![Tourplanner](docs/TourplannerDiagramm.png)
 
+<div style="page-break-after: always;"></div>
+
 ### Business Layer UML
 ![Business Logic Export](docs/BL.TourplannerDiagramm.png)
 
 ### Data Access Layer UML
 ![Business Logic Import](docs/DAL.TourplannerDiagramm.png)
 
+<div style="page-break-after: always;"></div>
 
 ## Use cases
 
@@ -50,6 +53,8 @@ The sequence diagram for full-text search shows the flow from the user initiatin
 
 ![Sequence_diagram_2](docs/sequence_diagram2.png)
 
+<div style="page-break-after: always;"></div>
+
 ## Wireframes
 ![Wireframe](docs/Wireframe.png)
 ## User Experience (UX) and Wireframes
@@ -68,6 +73,8 @@ Wireframes and screenshots of these views are included in the documentation fold
 - **Newtonsoft.Json:** Used for JSON serialization and deserialization.
 - **OpenRouteService & OpenStreetMap:** Used for route calculation and map images.
 - **WeatherAPI.com:** Used for retrieving real-time weather data.
+
+<div style="page-break-after: always;"></div>
 
 **Lessons Learned:**
 - The use of design patterns such as MVVM, Command, Observer, Factory, and Singleton greatly improved code maintainability and testability.
@@ -111,8 +118,6 @@ To ensure the reliability and correctness of our application, we implemented com
   - Implemented more than 20 unit tests, focusing on both typical and exceptional workflows.
 
 This approach helped us to identify and fix issues early in the development process, resulting in a more stable and maintainable application.
-
-
 
 ## Unique Feature
 Our TourPlanner application integrates the WeatherAPI.com service to provide real-time weather information for tour destinations. By displaying up-to-date weather data such as temperature, humidity, and wind speed, users can better plan and adjust their routes according to current conditions. This feature adds significant value by helping users make informed decisions and ensuring a safer, more enjoyable travel experience.
