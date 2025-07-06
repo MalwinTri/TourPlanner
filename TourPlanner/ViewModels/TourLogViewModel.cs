@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TourPlanner.Logging;
 using TourPlanner.Models;
+using TourPlanner.ViewModels.Commands;
 
 namespace TourPlanner.ViewModels
 {
@@ -149,9 +145,6 @@ namespace TourPlanner.ViewModels
                 OnPropertyChanged();
             }
         }
-
-
-
         public ComboBoxItem? Rating { get; set; }
 
         private void OnTourLogAdded(TourLog tourLog)
@@ -178,7 +171,5 @@ namespace TourPlanner.ViewModels
             var pattern = @"^([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
             return Regex.IsMatch(totalTime, pattern);
         }
-
-
     }
 }

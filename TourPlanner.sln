@@ -19,6 +19,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.Logging.Log4Net
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.Test", "TourPlanner.Test\TourPlanner.Test.csproj", "{2A4B124B-39BF-4575-BC94-90D0BC2762CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BL.Export", "TourPlanner.BL.Export\TourPlanner.BL.Export.csproj", "{6D5AE4F2-CE58-41DC-8F8C-F38521652377}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BL.Import", "TourPlanner.BL.Import\TourPlanner.BL.Import.csproj", "{53BC1625-8CFA-4D40-AF2D-FFE5C22AC2FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BL.iText", "TourPlanner.BL.iText\TourPlanner.BL.iText.csproj", "{A9EEC35F-40DC-4282-8908-FE9A7F5A8766}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BL.WeatherAPI", "TourPlanner.BL.WeatherAPI\TourPlanner.BL.WeatherAPI.csproj", "{F7406E0D-39ED-4E3A-A4A7-7031FC39036D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.BL.OpenRouteService", "TourPlanner.BL.OpenRouteService\TourPlanner.BL.OpenRouteService.csproj", "{28085495-BA6F-42E2-A414-7228AEC1B795}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +67,26 @@ Global
 		{2A4B124B-39BF-4575-BC94-90D0BC2762CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A4B124B-39BF-4575-BC94-90D0BC2762CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A4B124B-39BF-4575-BC94-90D0BC2762CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D5AE4F2-CE58-41DC-8F8C-F38521652377}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D5AE4F2-CE58-41DC-8F8C-F38521652377}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D5AE4F2-CE58-41DC-8F8C-F38521652377}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D5AE4F2-CE58-41DC-8F8C-F38521652377}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53BC1625-8CFA-4D40-AF2D-FFE5C22AC2FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53BC1625-8CFA-4D40-AF2D-FFE5C22AC2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53BC1625-8CFA-4D40-AF2D-FFE5C22AC2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53BC1625-8CFA-4D40-AF2D-FFE5C22AC2FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9EEC35F-40DC-4282-8908-FE9A7F5A8766}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9EEC35F-40DC-4282-8908-FE9A7F5A8766}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9EEC35F-40DC-4282-8908-FE9A7F5A8766}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9EEC35F-40DC-4282-8908-FE9A7F5A8766}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7406E0D-39ED-4E3A-A4A7-7031FC39036D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7406E0D-39ED-4E3A-A4A7-7031FC39036D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7406E0D-39ED-4E3A-A4A7-7031FC39036D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7406E0D-39ED-4E3A-A4A7-7031FC39036D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28085495-BA6F-42E2-A414-7228AEC1B795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28085495-BA6F-42E2-A414-7228AEC1B795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28085495-BA6F-42E2-A414-7228AEC1B795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28085495-BA6F-42E2-A414-7228AEC1B795}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

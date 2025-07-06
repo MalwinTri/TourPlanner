@@ -1,10 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using TourPlanner.Models;
 
 namespace TourPlanner.DAL.Postgres
@@ -27,8 +21,8 @@ namespace TourPlanner.DAL.Postgres
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Tour>().HasKey(t => t.Id);
-            modelBuilder.Entity<TourLog>().HasKey(tl => tl.Id);
+            modelBuilder.Entity<Tour>().ToTable("tours").HasKey(t => t.Id);
+            modelBuilder.Entity<TourLog>().ToTable("tourlogs").HasKey(tl => tl.Id);
 
         }
     }

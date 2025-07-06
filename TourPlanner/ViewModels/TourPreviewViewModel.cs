@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using TourPlanner.Logging;
 using TourPlanner.Models;
+using TourPlanner.ViewModels.Commands;
 
 namespace TourPlanner.ViewModels
 {
@@ -27,8 +28,6 @@ namespace TourPlanner.ViewModels
                 OnPropertyChanged();
             }
         }
-
-
         public TourPreviewViewModel(ILoggerFactory loggerFactory)
         {
             var logger = loggerFactory.CreateLogger<TourPreviewViewModel>();
@@ -45,12 +44,9 @@ namespace TourPlanner.ViewModels
                 logger.Debug("Tour details opened");
             }, (_) => SelectedTour != null);
         }
-
-
         private void OnTourDetailsOpened(Tour tour)
         {
             TourDetailsOpened?.Invoke(this, tour);
         }
-
     }
 }

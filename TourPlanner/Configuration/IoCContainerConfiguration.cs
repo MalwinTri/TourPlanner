@@ -1,7 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TourPlanner;
-using TourPlanner.Configuration;
+using TourPlanner.BL;
+using TourPlanner.BL.Export;
+using TourPlanner.BL.Import;
+using TourPlanner.BL.iText;
+using TourPlanner.BL.OpenRouteService;
+using TourPlanner.BL.WeatherAPI;
 using TourPlanner.DAL;
 using TourPlanner.DAL.Postgres;
 using TourPlanner.Logging.Log4Net;
@@ -10,7 +14,7 @@ using TourPlanner.ViewModels;
 using TourPlanner.Views;
 using ILoggerFactory = TourPlanner.Logging.ILoggerFactory;
 
-namespace SWEN2_TourPlanner.Configuration
+namespace TourPlanner.Configuration
 {
     internal class IoCContainerConfiguration
     {
@@ -23,41 +27,41 @@ namespace SWEN2_TourPlanner.Configuration
         {
             var services = new ServiceCollection();
 
-            // Load appsettings.json
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .Build();
 
-            services.AddSingleton<IConfiguration>(configuration);
+            services.AddSingleton<IConfiguration>((_) => new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("apikeys.json", optional: false, reloadOnChange: true)
+                .Build());
             services.AddSingleton<AppConfiguration>();
 
-            // Get connection string parts
-            var postgresConfig = configuration.GetSection("postgres");
-            var connectionString = postgresConfig["connectionstring"];
-            var username = postgresConfig["username"];
-            var password = postgresConfig["password"];
-            var fullConnectionString = $"{connectionString};Username={username};Password={password}";
-
-            // Register custom DbContext
-            services.AddSingleton<TourPlannerDbContext>(sp =>
-                new TourPlannerDbContext(fullConnectionString));
 
             services.AddSingleton<ITourPlannerPostgresRepositoryConfiguration>(s => s.GetRequiredService<AppConfiguration>());
+            services.AddSingleton<IOpenRouteServiceConfiguration>(s => s.GetRequiredService<AppConfiguration>());
+            services.AddSingleton<IItextConfiguration>(s => s.GetRequiredService<AppConfiguration>());
+            services.AddSingleton<IWeatherApiConfiguration>(s => s.GetRequiredService<AppConfiguration>());
+            services.AddSingleton<IExportConfiguration>(s => s.GetRequiredService<AppConfiguration>());
 
-            // Logging
             services.AddSingleton<ILoggerFactory>(new Log4NetFactory("log4net.conf"));
 
-            // DAL
             services.AddSingleton<ITourPlannerRepository, TourPlannerPostgresRepository>();
 
-            // Navigation
+            services.AddSingleton<ITourPlannerGenerator, OpenRouteServiceTourGenerator>();
+            services.AddSingleton<ITourPlannerManager, TourPlannerManager>();
+            services.AddSingleton<ITourPlannerLogManager, TourPlannerLogManager>();
+            services.AddSingleton<IReportGenerator, iTextReportGenerator>();
+            services.AddSingleton<IExportManager, ExportGenerator>();
+            services.AddSingleton<IImportManager, ImportGenerator>();
+            services.AddSingleton<IWeatherGenerator, WeatherApiGenerator>();
+
             services.AddSingleton<INavigationService, NavigationService>(s =>
             {
                 var navigationService = new NavigationService(s);
+                //register viewmodel with window
                 navigationService.RegisterNavigation<TourDetailsViewModel, TourDetailsDialog>();
                 navigationService.RegisterNavigation<TourLogViewModel, TourLogDialog>();
                 navigationService.RegisterNavigation<AddTourViewModel, AddTourDialog>();
                 navigationService.RegisterNavigation<EditTourViewModel, EditTourDialog>();
+
                 navigationService.RegisterNavigation<MainViewModel, MainWindow>((viewModel, window) =>
                 {
                     window.TourList.DataContext = viewModel.TourListViewModel;
@@ -67,7 +71,7 @@ namespace SWEN2_TourPlanner.Configuration
                 return navigationService;
             });
 
-            // ViewModels
+
             services.AddSingleton<SearchViewModel>();
             services.AddTransient<AddTourViewModel>();
             services.AddTransient<TourLogViewModel>();

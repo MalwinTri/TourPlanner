@@ -7,8 +7,8 @@
 
     <Window.Resources>
         <Style TargetType="TextBox">
-            <Setter Property="Margin" Value="5,0,20,0"></Setter>
-            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="Margin" Value="5,0,20,0"/>
+            <Setter Property="FontSize" Value="14"/>
         </Style>
 
         <Style TargetType="Button">
@@ -20,17 +20,16 @@
             <Setter Property="BorderBrush" Value="#58729e"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Width" Value="100"/>
-
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="2">
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="2">
                             <ContentPresenter HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      Margin="{TemplateBinding Padding}" />
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}" />
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -38,43 +37,35 @@
         </Style>
 
         <Style TargetType="ComboBox">
-            <Setter Property="Margin" Value="5,0,20,0"></Setter>
-            <Setter Property="FontSize" Value="14"></Setter>
+            <Setter Property="Margin" Value="5,0,20,0"/>
+            <Setter Property="FontSize" Value="14"/>
         </Style>
     </Window.Resources>
 
-   <Grid>
-    <ItemsControl>
+    <Grid Margin="10">
         <StackPanel>
             <Label Content="Add new Tour" FontSize="24" FontWeight="Bold" Foreground="#58729e" Margin="0,0,0,20" HorizontalAlignment="Center"/>
-        </StackPanel>
-        <StackPanel>
-            <Label Content="Name:" FontSize="14"/>
-            <TextBox x:Name="NameTextBox" Text="{Binding Name}"/>
-        </StackPanel>
-        <StackPanel>
-            <Label Content="Tour Description:" FontSize="14"/>
-            <TextBox x:Name="TourDescriptionTextBox" Text="{Binding Description}"/>
-        </StackPanel>
-        <StackPanel>
-            <Label Content="From:" FontSize="14"/>
-            <TextBox x:Name="FromTextBox" Text="{Binding From}"/>
-        </StackPanel>
-        <StackPanel>
-            <Label Content="To:" FontSize="14"/>
-            <TextBox x:Name="ToTextBox" Text="{Binding To}"/>
-        </StackPanel>
-        <StackPanel>
-            <Label Content="Transport Type:" FontSize="14"/>
-            <ComboBox x:Name="TransportTypeComboBox" SelectedValue="{Binding Transport}">
-                <ComboBoxItem Name="Car">Car</ComboBoxItem>
-                <ComboBoxItem Name="Walking">Walking</ComboBoxItem>
-                <ComboBoxItem Name="Bike">Bike</ComboBoxItem>
+
+            <Label Content="Name:"/>
+            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Tour Description:"/>
+            <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="From:"/>
+            <TextBox Text="{Binding From, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="To:"/>
+            <TextBox Text="{Binding To, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Label Content="Transport Type:"/>
+            <ComboBox SelectedItem="{Binding Transport, Mode=TwoWay}">
+                <ComboBoxItem Content="Car"/>
+                <ComboBoxItem Content="Walking"/>
+                <ComboBoxItem Content="Bike"/>
             </ComboBox>
-        </StackPanel>
-        <StackPanel>
+
             <Button Content="Add Tour" Command="{Binding AddTourCommand}" HorizontalAlignment="Center" Margin="10"/>
         </StackPanel>
-    </ItemsControl>
-</Grid>
+    </Grid>
 </Window>

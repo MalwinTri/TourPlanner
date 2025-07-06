@@ -1,28 +1,28 @@
 ﻿using System.Windows.Input;
 
-public class RelayCommand : ICommand
+namespace TourPlanner.ViewModels.Commands
 {
-    private readonly Action<object> _execute;
-    private readonly Predicate<object> _canExecute;
-
-    public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
+    public class RelayCommand : ICommand
     {
-        _execute = execute ?? throw new ArgumentNullException(nameof(execute));
-        _canExecute = canExecute ?? (_ => true);
-    }
+        private readonly Action<object?> _execute;
+        private readonly Predicate<object?>? _canExecute;
 
-    public bool CanExecute(object parameter) => _canExecute(parameter);
+        public event EventHandler? CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
 
-    public void Execute(object parameter) => _execute(parameter);
+        public RelayCommand(Action<object?> execute, Predicate<object?>? canExecute = null)
+        {
+            this._execute = execute;
+            this._canExecute = canExecute;
+        }
 
-    public event EventHandler CanExecuteChanged
-    {
-        add => CommandManager.RequerySuggested += value;
-        remove => CommandManager.RequerySuggested -= value;
-    }
+        public bool CanExecute(object? parameter) => _canExecute?.Invoke(parameter) ?? true;
 
-    public void RaiseCanExecuteChanged()
-    {
-        CommandManager.InvalidateRequerySuggested();
+        public void Execute(object? parameter) => _execute.Invoke(parameter);
+
+        public void RaiseCanExecuteChanged() => CommandManager.InvalidateRequerySuggested();
     }
 }

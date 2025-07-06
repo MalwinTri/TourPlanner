@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TourPlanner.Services
+namespace TourPlanner.BL.Enum
 {
-    public interface IFileDialogService
+    public enum edit
     {
-        string OpenImageFileDialog();
+        Generate = 0,
+        NonGenerate
     }
 }

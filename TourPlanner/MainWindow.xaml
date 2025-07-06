@@ -29,68 +29,66 @@
         </Style>
     </Window.Resources>
 
-    <DockPanel>
+    <Grid>
+        <!-- Hauptinhalte -->
+        <DockPanel>
+            <!-- Menüleiste -->
+            <Menu DockPanel.Dock="Top" Background="AliceBlue" Foreground="Black">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Import" Command="{Binding ImportCommand}"/>
+                    <MenuItem Header="_Export" Command="{Binding ExportCommand}"/>
+                    <Separator />
+                    <MenuItem Header="_Report" Command="{Binding ReportCommand}"/>
+                    <MenuItem Header="_Summary" Command="{Binding SummaryCommand}" />
+                </MenuItem>
+                <MenuItem Header="_Edit">
+                    <MenuItem Header="Add Tour" Command="{Binding ShowAddTourDialog}"/>
+                    <MenuItem Header="Edit Tour" Command="{Binding ShowEditTourDialog}"/>
+                    <MenuItem Header="Delete Tour" Command="{Binding DeleteTour}"/>
+                </MenuItem>
+                <MenuItem Header="_Options">
+                    <MenuItem Header="Settings" Command="{Binding ShowSettingsCommand}" />
+                    <MenuItem Header="About" Command="{Binding ShowAboutCommand}" />
+                </MenuItem>
+            </Menu>
 
-        <!-- Menu -->
-        <Menu DockPanel.Dock="Top" Background="AliceBlue" Foreground="Black">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Import" Command="{Binding ImportCommand}"/>
-                <MenuItem Header="_Export" Command="{Binding ExportCommand}"/>
-                <Separator />
-                <MenuItem Header="_Report" Command="{Binding ReportCommand}"/>
-                <MenuItem Header="_Summary" Command="{Binding SummaryCommand}" />
-            </MenuItem>
-            <MenuItem Header="_Edit">
-                <MenuItem Header="Add Tour" Command="{Binding ShowAddTourDialog}"/>
-                <MenuItem Header="Edit Tour" Command="{Binding ShowEditTourDialog}"/>
-                <MenuItem Header="Delete Tour" Command="{Binding DeleteTour}"/>
-            </MenuItem>
-            <MenuItem Header="_Options">
-                <MenuItem Header="Settings" Command="{Binding ShowSettingsCommand}" />
-                <MenuItem Header="About" Command="{Binding ShowAboutCommand}" />
-            </MenuItem>
-        </Menu>
+            <!-- Layout -->
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-        <!-- Main Grid -->
-        <Grid Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
-                <!-- Left Menu -->
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="300"/>
-                <!-- Tour List -->
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="*"/>
-                <!-- Preview -->
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <!-- Search -->
-                <RowDefinition Height="*"/>
-                <!-- Content -->
-            </Grid.RowDefinitions>
+                <views:SearchView Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3" Margin="0,0,0,10" x:Name="SearchView" />
 
-            <!-- Search Bar -->
-            <views:SearchView Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="3" Margin="0,0,0,10" x:Name="SearchView" />
+                <Border Grid.Row="1" Grid.Column="0" Background="#EAF6FF" CornerRadius="8" Padding="10">
+                    <views:TourMenuView x:Name="TourMenu" />
+                </Border>
 
-            <!-- Left Menu -->
-            <Border Grid.Row="1" Grid.Column="0" Background="#EAF6FF" CornerRadius="8" Padding="10">
-                <views:TourMenuView x:Name="TourMenu" />
-            </Border>
+                <Border Grid.Row="1" Grid.Column="2" Background="White" BorderBrush="#D3D3D3" BorderThickness="1" CornerRadius="8" Padding="10">
+                    <views:TourListView x:Name="TourList" />
+                </Border>
 
-            <!-- Center Tour List -->
-            <Border Grid.Row="1" Grid.Column="2" Background="White" BorderBrush="#D3D3D3" BorderThickness="1" CornerRadius="8" Padding="10">
-                <views:TourListView x:Name="TourList" />
-            </Border>
+                <Border Grid.Row="1" Grid.Column="4" Background="White" BorderBrush="#D3D3D3" BorderThickness="1" CornerRadius="8" Padding="10">
+                    <views:TourPreviewView x:Name="TourPreview" />
+                </Border>
+            </Grid>
+        </DockPanel>
 
-            <!-- Right Preview -->
-            <Border Grid.Row="1" Grid.Column="4" Background="White" BorderBrush="#D3D3D3" BorderThickness="1" CornerRadius="8" Padding="10">
-                <views:TourPreviewView x:Name="TourPreview" />
-            </Border>
-        </Grid>
-
-        <!-- Busy Overlay -->
-        <!--<Grid Background="#7FFFFFFF" Visibility="{Binding IsBusy, Converter={StaticResource VisibleIfTrueConverter}}">
+        <!-- ✅ Globales Busy Overlay -->
+        <Grid HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Background="#7FFFFFFF"
+              Visibility="{Binding IsBusy, Converter={StaticResource VisibleIfTrueConverter}}"
+              Panel.ZIndex="100"
+              IsHitTestVisible="{Binding IsBusy}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -101,13 +99,14 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Border Background="WhiteSmoke" Padding="10">
-                <StackPanel>
+            <Border Grid.Row="1" Grid.Column="1"
+                    BorderThickness="2"
+                    BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}">
+                <StackPanel Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
                     <Label Content="{Binding IsBusyText}" Margin="5"/>
                     <ProgressBar IsIndeterminate="True" Margin="5,0,5,5"/>
                 </StackPanel>
             </Border>
-        </Grid>-->
-
-    </DockPanel>
+        </Grid>
+    </Grid>
 </Window>
