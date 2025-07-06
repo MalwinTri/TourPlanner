@@ -14,6 +14,17 @@ Data is persisted in a PostgreSQL database using Entity Framework as the ORM. Th
 
 This layered approach ensures a clear separation of concerns between presentation, business logic, and data access, making the application maintainable and scalable.
 
+## Class diagrams
+
+### MVVM UML
+![Tourplanner](docs/TourplannerDiagramm.png)
+
+### Business Layer UML
+![Business Logic Export](docs/BL.TourplannerDiagramm.png)
+
+### Data Access Layer UML
+![Business Logic Import](docs/DAL.TourplannerDiagramm.png)
+
 
 ## Use cases
 
@@ -40,7 +51,7 @@ The sequence diagram for full-text search shows the flow from the user initiatin
 ![Sequence_diagram_2](docs/sequence_diagram2.png)
 
 ## Wireframes
-
+![Wireframe](docs/Wireframe.png)
 ## User Experience (UX) and Wireframes
 The user interface of TourPlanner is designed to be intuitive and user-friendly. The main screens include:
 - **Tour List View:** Displays all tours in a list with options to add, edit, or delete tours.
