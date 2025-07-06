@@ -41,6 +41,40 @@ The sequence diagram for full-text search shows the flow from the user initiatin
 
 ## Wireframes
 
+## User Experience (UX) and Wireframes
+The user interface of TourPlanner is designed to be intuitive and user-friendly. The main screens include:
+- **Tour List View:** Displays all tours in a list with options to add, edit, or delete tours.
+- **Tour Detail View:** Shows detailed information about a selected tour, including the map, distance, estimated time, and weather information.
+- **Tour Log View:** Allows users to view, add, edit, or delete logs associated with a tour.
+- **Search and Filter:** Provides a full-text search bar and filters for quick access to specific tours or logs.
+- **Report Generation:** Users can generate and download PDF reports from the UI.
+Wireframes and screenshots of these views are included in the documentation folder for reference.
+
+## Library Decisions and Lessons Learned
+- **iText7:** Used for generating PDF reports.
+- **Entity Framework:** Used as the ORM for database access.
+- **Log4Net:** Integrated for logging errors and application events.
+- **Newtonsoft.Json:** Used for JSON serialization and deserialization.
+- **OpenRouteService & OpenStreetMap:** Used for route calculation and map images.
+- **WeatherAPI.com:** Used for retrieving real-time weather data.
+
+**Lessons Learned:**
+- The use of design patterns such as MVVM, Command, Observer, Factory, and Singleton greatly improved code maintainability and testability.
+- Comprehensive unit testing is valuable for identifying and fixing errors early.
+- Integrating external APIs (OpenRouteService, WeatherAPI) was challenging but added significant value.
+- Proper error handling and logging are essential for robust software.
+- Further decoupling of ViewModels and business logic would be beneficial in future versions.
+
+## Implemented Design Patterns
+- **MVVM:** Separates UI from business logic, improving maintainability.
+- **Command Pattern:** Handles user actions from the UI.
+- **Observer Pattern:** Enables communication between ViewModels.
+- **Factory Pattern:** Used for creating logger instances.
+- **Singleton Pattern:** Ensures only one instance of certain classes exists.
+
+## Unit Testing Decisions
+Unit tests were written using NUnit to cover business logic, data access, validation, search, and computed attributes. The goal was to achieve high test coverage and ensure reliability. At least 20 unit tests were implemented, focusing on critical application logic and edge cases.
+
 
 
 ## Unique Feature
