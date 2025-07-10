@@ -13,20 +13,21 @@ namespace TourPlanner.BL
             _logger = loggerFactory.CreateLogger<TourPlannerLogManager>();
             _repository = repository;
         }
-        public TourLog? Add(TourLog tourLog)
+        public async Task<TourLog?> AddAsync(TourLog tourLog)
         {
             try
             {
-                _repository.Add(tourLog);
+                var result = await _repository.AddAsync(tourLog);
                 _logger.Debug($"Added tourLog {tourLog.Id}");
-                return tourLog;
+                return result;
             }
             catch (Exception e)
             {
-                _logger.Error(e.Message);
+                _logger.Error($"[AddAsync] {e.Message}");
                 throw;
             }
         }
+
         public TourLog? Edit(TourLog tourLog)
         {
             try

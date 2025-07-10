@@ -3,6 +3,7 @@ using TourPlanner.BL.Exceptions;
 using TourPlanner.DAL;
 using TourPlanner.Logging;
 using TourPlanner.Models;
+using TourPlanner.BL.Mapquest;
 
 namespace TourPlanner.BL
 {
@@ -12,14 +13,16 @@ namespace TourPlanner.BL
         private readonly ITourPlannerRepository _repository;
         private readonly ITourPlannerLogManager _logManager;
         private readonly ITourPlannerGenerator _generator;
+        private readonly IMapImageService _mapImageService;
 
-        public TourPlannerManager(ITourPlannerRepository repository, ITourPlannerLogManager tourLogManager, ITourPlannerGenerator generator, ILoggerFactory loggerFactory)
+        public TourPlannerManager(ITourPlannerRepository repository, ITourPlannerLogManager tourLogManager, ITourPlannerGenerator generator, IMapImageService mapImageService, ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<TourPlannerManager>();
 
             _repository = repository;
             _logManager = tourLogManager;
             _generator = generator;
+            _mapImageService = mapImageService;
         }
 
         public async Task<Tour?> Add(Tour tour)
@@ -34,7 +37,7 @@ namespace TourPlanner.BL
                 }
                 t.Popularity = CalculatePopularity(t);
                 t.ChildFriendliness = CalculateChildFriendliness(t);
-                _repository.Add(t);
+                await _repository.AddAsync(t);
 
                 _logger.Debug($"Added tour {t.Name}");
                 return t;
@@ -45,7 +48,6 @@ namespace TourPlanner.BL
                 throw;
             }
         }
-
         public int CalculateChildFriendliness(Tour tour)
         {
             try
@@ -152,19 +154,36 @@ namespace TourPlanner.BL
         {
             try
             {
-                _repository.Remove(tour);
+                _logger.Debug($"[DeleteTour] Attempting to delete tour: {tour.Name} | ID: {tour.Id}");
+
                 var logs = _logManager.FindMatchingTourLogs(tour);
+                _logger.Debug($"[DeleteTour] Found {logs.Count()} logs associated with this tour.");
+
                 foreach (var log in logs)
                 {
+                    _logger.Debug($"[DeleteTour] Deleting log: {log.Id}");
                     _logManager.Delete(log);
+                }
+
+                var result = _repository.Remove(tour);
+                _logger.Debug($"[DeleteTour] Tour repository remove result: {result}");
+
+                if (!result)
+                {
+                    _logger.Warning($"[DeleteTour] Failed to delete tour in repository for ID: {tour.Id}");
+                }
+                else
+                {
+                    _logger.Debug($"[DeleteTour] Successfully deleted tour: {tour.Name} | ID: {tour.Id}");
                 }
             }
             catch (Exception e)
             {
-                _logger.Error(e.Message);
+                _logger.Error($"[DeleteTour] Exception: {e.Message}");
                 throw;
             }
         }
+
 
         public async Task<Tour?> Edit(Tour tour, edit mode = edit.Generate)
         {
@@ -173,18 +192,21 @@ namespace TourPlanner.BL
                 var t = tour;
                 if (mode == edit.Generate)
                 {
-                    t = await _generator.GenerateTourFromTourAsync(tour);
+                    DeleteOldImageIfExists(t);              // Bild löschen
+                    t = await _generator.GenerateTourFromTourAsync(t); // neues Bild + Pfad setzen
+                    if (t == null)
+                    {
+                        _logger.Error("Generator returned null tour");
+                        throw new ArgumentException("Generator returned null tour");
+                    }
                 }
 
-                if (t == null)
-                {
-                    _logger.Error("Generator returned null tour");
-                    throw new ArgumentException("Generator returned null tour");
-                }
-
+                _repository.Edit(t); // ⬅️ SPEICHERT auch ImagePath!
                 t.Popularity = CalculatePopularity(t);
                 t.ChildFriendliness = CalculateChildFriendliness(t);
-                _repository.Edit(t);
+
+                _repository.Edit(t); // Hier muss der neue ImagePath gespeichert werden
+
                 return t;
             }
             catch (Exception e)
@@ -211,5 +233,35 @@ namespace TourPlanner.BL
                 throw;
             }
         }
+
+        private void DeleteOldImageIfExists(Tour tour)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(tour.ImagePath))
+                {
+                    var localPath = new Uri(tour.ImagePath).LocalPath;
+
+                    if (File.Exists(localPath))
+                    {
+                        File.Delete(localPath);
+                        _logger.Debug($"Deleted old image at {localPath}");
+
+                        // Bild gelöscht, Pfad zurücksetzen
+                        tour.ImagePath = null;
+                    }
+                    else
+                    {
+                        _logger.Warning($"Image file not found at path: {localPath}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Failed to delete old image: {ex.Message}");
+            }
+        }
+
+
     }
 }

@@ -4,7 +4,7 @@ namespace TourPlanner.BL
 {
     public interface ITourPlannerLogManager
     {
-        TourLog? Add(TourLog tourLog);
+        Task<TourLog?> AddAsync(TourLog tourLog);
         TourLog? Edit(TourLog tourLog);
         void Delete(TourLog tour);
         IEnumerable<TourLog> FindMatchingTourLogs(Tour tour);

@@ -1,23 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.Windows.Data;
 
 namespace TourPlanner.Helper
 {
     public class SecondsConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var seconds = (double)value;
-            return TimeSpan.FromSeconds(seconds).ToString(@"hh\:mm\:ss");
+            if (value is double seconds)
+            {
+                var time = TimeSpan.FromSeconds(seconds);
+                if (time.TotalHours >= 1)
+                    return $"{(int)time.TotalHours} h {time.Minutes} min";
+                if (time.TotalMinutes >= 1)
+                    return $"{(int)time.TotalMinutes} min";
+                return $"{time.Seconds} sec";
+            }
+
+            return "0 min";
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            if (value == null || !double.TryParse(value.ToString(), out double seconds) || double.IsInfinity(seconds) || seconds <= 0)
+                return "Dauer unbekannt";
+
+            var roundedSeconds = Math.Floor(seconds); 
+            var time = TimeSpan.FromSeconds(roundedSeconds);
+            return time.ToString(@"hh\:mm\:ss"); 
         }
     }
 }

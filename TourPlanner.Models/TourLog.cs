@@ -9,7 +9,7 @@ namespace TourPlanner.Models
         public Guid Id { get; set; }
 
         [Column("tourid")]
-        public Guid? TourId { get; set; }
+        public Guid TourId { get; set; }
 
         [Column("date")]
         public DateTime Date { get; set; }
@@ -26,7 +26,7 @@ namespace TourPlanner.Models
         [Column("rating")]
         public double? Rating { get; set; }
 
-        public TourLog(Guid id, Guid? tourId, DateTime date, string? comment, double? difficulty, double? totalTime, double? rating)
+        public TourLog(Guid id, Guid tourId, DateTime date, string? comment, double? difficulty, double? totalTime, double? rating)
         {
             Id = id;
             TourId = tourId;

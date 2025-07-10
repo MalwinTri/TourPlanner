@@ -64,6 +64,8 @@
 
   <ItemGroup>
     <Folder Include="images\" />
+    <Folder Include="Export\" />
+    <Folder Include="Reports\" />
   </ItemGroup>
 
 </Project>

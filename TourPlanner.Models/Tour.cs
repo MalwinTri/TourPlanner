@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TourPlanner.Models
 {
     [Table("tours")]
     public class Tour
     {
+
         [Column("id")]
         public Guid Id { get; set; }
 

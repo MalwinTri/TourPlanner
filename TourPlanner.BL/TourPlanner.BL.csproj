@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TourPlanner.BL.Mapquest\TourPlanner.BL.Mapquest.csproj" />
     <ProjectReference Include="..\TourPlanner.DAL\TourPlanner.DAL.csproj" />
     <ProjectReference Include="..\TourPlanner.Logging\TourPlanner.Logging.csproj" />
     <ProjectReference Include="..\TourPlanner.Models\TourPlanner.Models.csproj" />

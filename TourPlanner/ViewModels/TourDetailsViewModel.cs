@@ -13,12 +13,12 @@ namespace TourPlanner.ViewModels
     public class TourDetailsViewModel : BaseViewModel
     {
         private readonly ILogger _logger;
-
         private readonly IWeatherGenerator _weatherGenerator;
         private readonly ITourPlannerLogManager _tourLogManager;
         private readonly ITourPlannerManager _tourManager;
 
         private Weather? _weather;
+        private string? _tourImagePath;
 
         public ICommand CloseCommand { get; }
         public ICommand AddLogCommand { get; }
@@ -32,6 +32,22 @@ namespace TourPlanner.ViewModels
             set
             {
                 _selectedTour = value;
+                OnPropertyChanged();
+
+                if (_selectedTour != null)
+                {
+                    // Bildpfad aktualisieren (mit Cache-Busting)
+                    TourImagePath = $"{_selectedTour.ImagePath}?{DateTime.Now.Ticks}";
+                }
+            }
+        }
+
+        public string? TourImagePath
+        {
+            get => _tourImagePath;
+            set
+            {
+                _tourImagePath = value;
                 OnPropertyChanged();
             }
         }
@@ -47,7 +63,6 @@ namespace TourPlanner.ViewModels
         }
 
         public ObservableCollection<TourLog> TourLogs { get; } = new();
-
 
         private TourLog? _selectedTourLog;
         public TourLog? SelectedTourLog
@@ -67,14 +82,12 @@ namespace TourPlanner.ViewModels
                 if (SelectedTour == null)
                 {
                     _logger.Error("SelectedTour is null");
-
                     NavigationService?.ShowMessageBox("Error with Tour logs", "Error");
                     NavigationService?.Close();
                     return;
                 }
+
                 var tourLogs = _tourLogManager.FindMatchingTourLogs(SelectedTour).ToList();
-
-
                 TourLogs.Clear();
                 tourLogs.ForEach(j => TourLogs.Add(j));
 
@@ -83,7 +96,6 @@ namespace TourPlanner.ViewModels
             catch (PostgresDataBaseException e)
             {
                 _logger.Error(e.Message);
-
                 NavigationService?.ShowMessageBox("Error with Tour logs", "Error");
                 NavigationService?.Close();
             }
@@ -96,7 +108,6 @@ namespace TourPlanner.ViewModels
                 if (SelectedTour == null)
                 {
                     _logger.Error("SelectedTour is null");
-
                     NavigationService?.ShowMessageBox("Error with Tour logs", "Error");
                     NavigationService?.Close();
                     return;
@@ -117,30 +128,28 @@ namespace TourPlanner.ViewModels
             catch (PostgresDataBaseException e)
             {
                 _logger.Error(e.Message);
-
                 NavigationService?.ShowMessageBox("Error with Tour", "Error");
                 NavigationService?.Close();
             }
         }
 
-        public TourDetailsViewModel(ILoggerFactory loggerFactory, ITourPlannerLogManager tourLogManager, IWeatherGenerator weatherGenerator, Tour selectedTour, ITourPlannerManager tourManager)
+        public TourDetailsViewModel(
+            ILoggerFactory loggerFactory,
+            ITourPlannerLogManager tourLogManager,
+            IWeatherGenerator weatherGenerator,
+            Tour selectedTour,
+            ITourPlannerManager tourManager)
         {
             _logger = loggerFactory.CreateLogger<TourDetailsViewModel>();
-
             _weatherGenerator = weatherGenerator;
             _tourLogManager = tourLogManager;
             _tourManager = tourManager;
 
             SelectedTour = selectedTour;
-
             LoadWeather();
-
             SetTourLogs();
 
-            CloseCommand = new RelayCommand((_) =>
-            {
-                NavigationService?.Close();
-            });
+            CloseCommand = new RelayCommand((_) => NavigationService?.Close());
 
             AddLogCommand = new RelayCommand((_) =>
             {
@@ -149,26 +158,20 @@ namespace TourPlanner.ViewModels
                     CorrespondingTour = SelectedTour
                 };
 
-                tourLogViewModel!.TourLogAdded += async (_, tourLog) =>
+                tourLogViewModel.TourLogAdded += async (_, tourLog) =>
                 {
-                    try
-                    {
-                        tourLogManager.Add(tourLog);
-                    }
+                    try { await tourLogManager.AddAsync(tourLog); }
                     catch (PostgresDataBaseException e)
                     {
                         _logger.Error(e.Message);
-
                         NavigationService?.ShowMessageBox("Error with Tour logs", "Error");
                         NavigationService?.Close();
                     }
 
                     SetTourLogs();
                     await EditTour();
-
                     _logger.Debug($"TourLog with ID ({tourLog.Id}) added");
                 };
-
 
                 NavigationService?.NavigateTo(tourLogViewModel);
             });
@@ -182,53 +185,43 @@ namespace TourPlanner.ViewModels
                     Usecase = "Edit Tour Log"
                 };
 
-                tourLogViewModel!.TourLogEdited += async (_, tourLog) =>
+                tourLogViewModel.TourLogEdited += async (_, tourLog) =>
                 {
-                    try
-                    {
-                        tourLogManager.Edit(tourLog);
-                    }
+                    try { tourLogManager.Edit(tourLog); }
                     catch (PostgresDataBaseException e)
                     {
                         _logger.Error(e.Message);
-
                         NavigationService?.ShowMessageBox("Error with Tour logs", "Error");
                         NavigationService?.Close();
                     }
+
                     SetTourLogs();
                     await EditTour();
-
                     _logger.Debug($"TourLog with ID ({tourLog.Id}) edited");
                 };
 
                 NavigationService?.NavigateTo(tourLogViewModel);
-
             }, (_) => SelectedTourLog != null);
 
             DeleteLogCommand = new RelayCommand(async (_) =>
             {
-                Guid id = SelectedTourLog!.Id;
-                try
-                {
-                    tourLogManager.Delete(SelectedTourLog!);
-                }
+                var id = SelectedTourLog!.Id;
+                try { tourLogManager.Delete(SelectedTourLog!); }
                 catch (PostgresDataBaseException e)
                 {
                     _logger.Error(e.Message);
-
                     NavigationService?.ShowMessageBox("Error with Tour logs", "Error");
                     NavigationService?.Close();
                 }
 
                 SetTourLogs();
                 await EditTour();
-
                 _logger.Debug($"TourLog with ID ({id}) deleted");
-
             }, (_) => SelectedTourLog != null);
 
             _logger.Debug($"TourDetailsViewModel created for Tour with ID ({SelectedTour.Id})");
         }
+
         private async void LoadWeather()
         {
             try
@@ -251,9 +244,9 @@ namespace TourPlanner.ViewModels
                 }
 
                 Weather.Location = SelectedTour.To;
-                var weatherTemp = Weather;
+                var temp = Weather;
                 Weather = null;
-                Weather = weatherTemp;
+                Weather = temp;
             }
             catch (WeatherApiReturnedNullException e)
             {
@@ -261,7 +254,6 @@ namespace TourPlanner.ViewModels
                 _logger.Error(e.Message);
                 NavigationService?.ShowMessageBox("Weather could not be retrieved", "Error");
             }
-
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Input;
+using TourPlanner.BL;
 using TourPlanner.Logging;
 using TourPlanner.Models;
 using TourPlanner.ViewModels.Commands;
@@ -9,6 +10,7 @@ namespace TourPlanner.ViewModels
     public class EditTourViewModel : BaseViewModel
     {
         private readonly ILogger _logger;
+        private readonly ITourPlannerManager _tourManager;
 
         private string? _name;
         private string? _description;
@@ -32,87 +34,101 @@ namespace TourPlanner.ViewModels
                 Description = _tourToEdit.Description;
                 From = _tourToEdit.From;
                 To = _tourToEdit.To;
+                SelectedTransport = _tourToEdit.Transport;
             }
         }
 
-        public EditTourViewModel(ILoggerFactory loggerFactory)
+        private bool _isEditing;
+        public bool IsEditing
         {
+            get => _isEditing;
+            set { _isEditing = value; OnPropertyChanged(); }
+        }
+
+        public EditTourViewModel(ITourPlannerManager tourManager, ILoggerFactory loggerFactory)
+        {
+            _tourManager = tourManager;
             _logger = loggerFactory.CreateLogger<EditTourViewModel>();
 
-            EditTourCommand = new RelayCommand((_) =>
+            EditTourCommand = new RelayCommand(async (_) =>
             {
+                _logger.Debug("EditTourCommand triggered");
+
                 if (TourToEdit == null)
                 {
                     _logger.Error("Tour to edit is null");
                     NavigationService!.ShowMessageBox("Tour to edit is null", "Edit dialog error");
                     return;
                 }
-                if (Transport == null)
-                {
-                    _logger.Error("Transport combobox item is null");
-                    NavigationService!.ShowMessageBox("Transport method not selected", "Edit dialog error");
-                    return;
-                }
 
-                if (!InputEditValidation(Name, Description, From, To, Transport!.Content.ToString()))
+                if (!InputEditValidation(Name, Description, From, To, SelectedTransport))
                 {
+                    _logger.Warning("Validation failed during tour edit");
                     ValidationsFailed?.Invoke(this, EventArgs.Empty);
                     return;
                 }
 
-                TourToEdit.Name = Name;
-                TourToEdit.Description = Description;
-                TourToEdit.From = From;
-                TourToEdit.To = To;
-                TourToEdit.Transport = Transport.Content.ToString()!;
-                OnTourEdited(TourToEdit);
+                try
+                {
+                    IsEditing = true;
+                    _logger.Debug("Starting tour edit...");
 
-                NavigationService!.Close();
+                    TourToEdit.Name = Name;
+                    TourToEdit.Description = Description;
+                    TourToEdit.From = From;
+                    TourToEdit.To = To;
+                    TourToEdit.Transport = SelectedTransport;
+
+                    _logger.Debug($"Sending tour to manager: {TourToEdit.Name}, From={TourToEdit.From}, To={TourToEdit.To}");
+
+                    var updatedTour = await _tourManager.Edit(TourToEdit, BL.Enum.edit.Generate);
+
+                    if (updatedTour != null)
+                    {
+                        _logger.Debug($"Tour edited successfully. New image path: {updatedTour.ImagePath}");
+                        OnTourEdited(updatedTour);
+                    }
+
+                    NavigationService!.Close();
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error("Fehler beim Bearbeiten: " + ex.Message);
+                    NavigationService!.ShowMessageBox("Fehler beim Bearbeiten", ex.Message);
+                }
+                finally
+                {
+                    IsEditing = false;
+                    _logger.Debug("Edit command finished");
+                }
             }, (_) => true);
         }
 
         public string? Name
         {
             get => _name;
-            set
-            {
-                _name = value;
-                OnPropertyChanged();
-            }
+            set { _name = value; OnPropertyChanged(); }
         }
 
         public string? Description
         {
             get => _description;
-            set
-            {
-                _description = value;
-                OnPropertyChanged();
-            }
+            set { _description = value; OnPropertyChanged(); }
         }
 
         public string? From
         {
             get => _from;
-            set
-            {
-                _from = value;
-                OnPropertyChanged();
-            }
+            set { _from = value; OnPropertyChanged(); }
         }
 
         public string? To
         {
             get => _to;
-            set
-            {
-                _to = value;
-                OnPropertyChanged();
-            }
+            set { _to = value; OnPropertyChanged(); }
         }
 
-        public ComboBoxItem? Transport { get; set; }
-
+        public string? SelectedTransport { get; set; }
 
         private void OnTourEdited(Tour tour)
         {
@@ -121,14 +137,9 @@ namespace TourPlanner.ViewModels
 
         private static bool InputEditValidation(string? name, string? description, string? from, string? to, string? transport)
         {
-            if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(description) || string.IsNullOrWhiteSpace(from) || string.IsNullOrWhiteSpace(to) || string.IsNullOrWhiteSpace(transport))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return !(string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(description) ||
+                     string.IsNullOrWhiteSpace(from) || string.IsNullOrWhiteSpace(to) ||
+                     string.IsNullOrWhiteSpace(transport));
         }
     }
 }

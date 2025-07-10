@@ -8,10 +8,10 @@
         mc:Ignorable="d"
         Title="Tour Details"
         Height="800" Width="1000"
+        ResizeMode="CanResize"
         Background="AliceBlue">
 
     <Window.Resources>
-        <!-- Button Style -->
         <Style TargetType="Button">
             <Setter Property="Background" Value="#3399CC"/>
             <Setter Property="Foreground" Value="White"/>
@@ -31,65 +31,73 @@
             </Setter>
         </Style>
 
-        <!-- Konverter -->
         <converter:PathConverter x:Key="PathConverter"/>
         <converter:TimeConverter x:Key="TimeConverter"/>
         <converter:SecondsConverter x:Key="SecondsConverter"/>
     </Window.Resources>
 
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <DockPanel Margin="10">
 
-        <!-- Tour Image -->
-        <Border Grid.ColumnSpan="3" BorderThickness="1" BorderBrush="#CCCCCC" CornerRadius="10" Margin="5" Padding="5"
-                DataContext="{Binding SelectedTour}" HorizontalAlignment="Center">
-            <Image Height="300" Source="{Binding ImagePath, Converter={StaticResource PathConverter}, FallbackValue='https://via.placeholder.com/300x200.png'}" Stretch="UniformToFill"/>
-        </Border>
+            <Border BorderThickness="1" BorderBrush="#CCCCCC" CornerRadius="10" Margin="0 0 0 10" Padding="5" DockPanel.Dock="Top" DataContext="{Binding SelectedTour}">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto"
+                      MaxHeight="400"
+                      Margin="0 0 0 20">
+                    <Image
+                        Source="{Binding Path=ImagePath, Converter={StaticResource PathConverter}, FallbackValue='https://via.placeholder.com/800x400.png'}"
+                        Stretch="Uniform"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"/>
+                </ScrollViewer>
 
-        <!-- Tour Info -->
-        <StackPanel Grid.Row="1" Grid.Column="0" Margin="10" DataContext="{Binding SelectedTour}">
-            <TextBlock Text="{Binding Name}" FontSize="26" FontWeight="Bold" Margin="0,10"/>
-            <TextBlock Text="{Binding From, StringFormat=From: {0}}" FontSize="16" Margin="0,5"/>
-            <TextBlock Text="{Binding To, StringFormat=To: {0}}" FontSize="16" Margin="0,5"/>
-            <TextBlock Text="{Binding Transport, StringFormat=Transport: {0}}" FontSize="16" Margin="0,5"/>
-            <TextBlock Text="{Binding Description, StringFormat=Description: {0}}" FontSize="16" Margin="0,5"/>
-            <TextBlock Text="{Binding Distance, StringFormat=Distance: {0:F2} km}" FontSize="16" Margin="0,5"/>
-            <TextBlock Text="{Binding Time, Converter={StaticResource SecondsConverter}, StringFormat=Time: {0}}" FontSize="16" Margin="0,5"/>
-            <TextBlock Text="{Binding Popularity, StringFormat=Popularity: {0}}" FontSize="16" Margin="0,5"/>
-            <TextBlock Text="{Binding ChildFriendliness, StringFormat=Child Friendliness: {0}}" FontSize="16" Margin="0,5"/>
-        </StackPanel>
+            </Border>
 
-        <!-- Tour Logs -->
-        <DataGrid Grid.Row="1" Grid.Column="1" AutoGenerateColumns="False" IsReadOnly="True"
-                  ItemsSource="{Binding TourLogs}" SelectedItem="{Binding SelectedTourLog}"
-                  Margin="10" FontSize="14">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Date/Time" Binding="{Binding Date, Converter={StaticResource TimeConverter}}"/>
-                <DataGridTextColumn Header="Comment" Binding="{Binding Comment}"/>
-                <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty}"/>
-                <DataGridTextColumn Header="Total Time" Binding="{Binding TotalTime, Converter={StaticResource SecondsConverter}}"/>
-                <DataGridTextColumn Header="Rating" Binding="{Binding Rating}"/>
-            </DataGrid.Columns>
-        </DataGrid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <!-- Weather -->
-        <view:WeatherView Grid.Row="1" Grid.Column="2" Margin="10" DataContext="{Binding Weather}" />
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- Buttons -->
-        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Add Log" Command="{Binding AddLogCommand}" Width="100"/>
-            <Button Content="Edit Log" Command="{Binding EditLogCommand}" Width="100"/>
-            <Button Content="Delete Log" Command="{Binding DeleteLogCommand}" Width="100"/>
-            <Button Content="Close" Command="{Binding CloseCommand}" Width="100"/>
-        </StackPanel>
-    </Grid>
+                <StackPanel Grid.Row="0" Grid.Column="0" Margin="10" DataContext="{Binding SelectedTour}">
+                    <TextBlock Text="{Binding Name}" FontSize="26" FontWeight="Bold" Margin="0,10"/>
+                    <TextBlock Text="{Binding From, StringFormat=From: {0}}" FontSize="16" Margin="0,5"/>
+                    <TextBlock Text="{Binding To, StringFormat=To: {0}}" FontSize="16" Margin="0,5"/>
+                    <TextBlock Text="{Binding Transport, StringFormat=Transport: {0}}" FontSize="16" Margin="0,5"/>
+                    <TextBlock Text="{Binding Description, StringFormat=Description: {0}}" FontSize="16" Margin="0,5"/>
+                    <TextBlock Text="{Binding Distance, StringFormat=Distance: {0:F2} km}" FontSize="16" Margin="0,5"/>
+                    <TextBlock Text="{Binding Time, Converter={StaticResource SecondsConverter}, StringFormat=Time: {0}}" FontSize="16" Margin="0,5"/>
+                    <TextBlock Text="{Binding Popularity, StringFormat=Popularity: {0}}" FontSize="16" Margin="0,5"/>
+                    <TextBlock Text="{Binding ChildFriendliness, StringFormat=Child Friendliness: {0}}" FontSize="16" Margin="0,5"/>
+                </StackPanel>
+
+                <DataGrid Grid.Row="0" Grid.Column="1" AutoGenerateColumns="False" IsReadOnly="True"
+                          ItemsSource="{Binding TourLogs}" SelectedItem="{Binding SelectedTourLog}"
+                          Margin="10" FontSize="14" MinHeight="250">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Date/Time" Binding="{Binding Date, Converter={StaticResource TimeConverter}}"/>
+                        <DataGridTextColumn Header="Comment" Binding="{Binding Comment}"/>
+                        <DataGridTextColumn Header="Difficulty" Binding="{Binding Difficulty}"/>
+                        <DataGridTextColumn Header="Total Time" Binding="{Binding TotalTime, Converter={StaticResource SecondsConverter}}"/>
+                        <DataGridTextColumn Header="Rating" Binding="{Binding Rating}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <view:WeatherView Grid.Row="0" Grid.Column="2" Margin="10" DataContext="{Binding Weather}" />
+
+                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                    <Button Content="Add Log" Command="{Binding AddLogCommand}" Width="100"/>
+                    <Button Content="Edit Log" Command="{Binding EditLogCommand}" Width="100"/>
+                    <Button Content="Delete Log" Command="{Binding DeleteLogCommand}" Width="100"/>
+                    <Button Content="Close" Command="{Binding CloseCommand}" Width="100"/>
+                </StackPanel>
+            </Grid>
+        </DockPanel>
+    </ScrollViewer>
 </Window>
