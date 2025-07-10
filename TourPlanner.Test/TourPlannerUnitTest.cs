@@ -31,7 +31,7 @@ namespace TourPlanner.Test
             return _tours.RemoveAll(t => t.Id == tour.Id) > 0;
         }
 
-        
+
 
         public TourLog? Edit(TourLog tourLog)
         {
@@ -62,7 +62,7 @@ namespace TourPlanner.Test
         {
             _logs.Add(tourLog);
             return Task.FromResult<TourLog?>(tourLog);
-        }
+    }
 
         public Task<Tour> AddTourWithLogsAsync(Tour tour, List<TourLog> tourLogs)
         {
@@ -157,6 +157,10 @@ namespace TourPlanner.Test
             Assert.IsEmpty(result);
         }
 
+            var generator = new iTextReportGenerator(dummyTourManager, dummyLogManager, dummyConfig, dummyLoggerFactory);
+            var result = generator.GenerateReport(_tour);
+            Assert.IsTrue(result);
+        }
 
         [Test]
         public void Test_13_GenerateSummary_CreatesPdf()
@@ -222,6 +226,10 @@ namespace TourPlanner.Test
             Assert.AreEqual(originalCount, _repo.GetAllTours().Count());
         }
 
+            var generator = new iTextReportGenerator(dummyTourManager, dummyLogManager, dummyConfig, dummyLoggerFactory);
+            var result = generator.GenerateSummary();
+            Assert.IsTrue(Directory.Exists(tempDir));
+        }
         [Test]
         public void Test_17_Edit_Tour_ReturnsNull_IfNotExists()
         {

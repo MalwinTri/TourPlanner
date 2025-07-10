@@ -74,6 +74,7 @@ namespace TourPlanner.Configuration
                 return navigationService;
             });
 
+
             services.AddSingleton<SearchViewModel>();
             services.AddTransient<AddTourViewModel>();
             services.AddTransient<TourLogViewModel>();

@@ -5,12 +5,16 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
+        <!-- TextBox + ComboBox Styles -->
         <Style TargetType="TextBox">
             <Setter Property="Margin" Value="5,0,20,0"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="5"/>
         </Style>
 
         <Style TargetType="Button">
+            <Setter Property="Margin" Value="10,20"/>
+            <Setter Property="Padding" Value="8,4"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Margin" Value="10,0,0,0"/>
             <Setter Property="Padding" Value="10,5"/>
@@ -23,6 +27,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
+                                CornerRadius="5"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="2">
@@ -45,6 +50,7 @@
         <StackPanel>
             <Label Content="Edit Tour" FontSize="24" FontWeight="Bold" Foreground="#58729e" Margin="0,0,0,20" HorizontalAlignment="Center"/>
 
+            <!-- Input Fields -->
             <Label Content="Name:"/>
             <TextBox Text="{Binding Name}"/>
 

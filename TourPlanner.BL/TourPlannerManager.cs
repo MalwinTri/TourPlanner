@@ -171,7 +171,7 @@ namespace TourPlanner.BL
                 if (!result)
                 {
                     _logger.Warning($"[DeleteTour] Failed to delete tour in repository for ID: {tour.Id}");
-                }
+            }
                 else
                 {
                     _logger.Debug($"[DeleteTour] Successfully deleted tour: {tour.Name} | ID: {tour.Id}");
@@ -194,11 +194,11 @@ namespace TourPlanner.BL
                 {
                     DeleteOldImageIfExists(t);              // Bild löschen
                     t = await _generator.GenerateTourFromTourAsync(t); // neues Bild + Pfad setzen
-                    if (t == null)
-                    {
-                        _logger.Error("Generator returned null tour");
-                        throw new ArgumentException("Generator returned null tour");
-                    }
+                if (t == null)
+                {
+                    _logger.Error("Generator returned null tour");
+                    throw new ArgumentException("Generator returned null tour");
+                }
                 }
 
                 _repository.Edit(t); // ⬅️ SPEICHERT auch ImagePath!

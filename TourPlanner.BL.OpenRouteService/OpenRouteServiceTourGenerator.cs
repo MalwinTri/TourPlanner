@@ -1,4 +1,7 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
+using System.Globalization;
+using System.Net.Http.Headers;
 using System.Runtime.Versioning;
 using System.Text.Json;
 using TourPlanner.BL.Exceptions;
@@ -133,7 +136,7 @@ namespace TourPlanner.BL.OpenRouteService
                 throw new Exception("Coordinates not found");
 
             return new List<double> { coordinates[0], coordinates[1] }; // [lon, lat] 
-        }
+            }
 
         private async Task EnsureSuccessOrThrow(HttpResponseMessage response, string context)
         {

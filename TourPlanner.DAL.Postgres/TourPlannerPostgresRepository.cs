@@ -266,13 +266,13 @@ namespace TourPlanner.DAL.Postgres
                 var path = new Uri(tour.ImagePath).LocalPath;
                 if (File.Exists(path))
                 {
-                    File.Delete(path);
+            File.Delete(path);
                 }
 
                 tour.ImagePath = null;
 
-                return true;
-            }
+            return true;
+        }
             catch (IOException ex)
             {
                 // Datei kann nicht gelöscht werden, vermutlich noch im Zugriff

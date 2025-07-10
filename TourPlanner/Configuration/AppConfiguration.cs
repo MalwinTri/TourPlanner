@@ -23,6 +23,7 @@ namespace TourPlanner.Configuration
             _configuration = configuration;
         }
 
+
         // OpenRouteService
         public string OpenRouteServiceApiUrl => _configuration["openrouteservice:baseurl"]
             ?? throw new InvalidOperationException("Missing ORS baseurl in configuration.");

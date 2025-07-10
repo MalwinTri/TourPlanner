@@ -175,6 +175,8 @@ namespace TourPlanner.ViewModels
                     // Log before and after resetting preview
                     _logger.Debug("Resetting TourPreviewViewModel.SelectedTour");
                     TourPreviewViewModel.SelectedTour = null;
+                    TourPreviewViewModel.SelectedTour = t;
+                    IsBusy = false;
 
                     _logger.Debug("Assigning updated tour to TourPreviewViewModel");
                     TourPreviewViewModel.SelectedTour = new Tour(
@@ -197,6 +199,7 @@ namespace TourPlanner.ViewModels
                     _logger.Error("Tour could not be updated (Postgres)");
                     _logger.Error(e.Message);
                     NavigationService?.ShowMessageBox("Tour could not be added", "Error");
+                    IsBusy = false;
                 }
                 catch (OpenRouteServicemanagerException e)
                 {
@@ -209,6 +212,7 @@ namespace TourPlanner.ViewModels
                     IsBusy = false;
                     _logger.Debug("IsBusy reset after tour edit");
                 }
+
             };
 
             _editTourViewModel.ValidationsFailed += (_, errors) =>

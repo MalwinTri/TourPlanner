@@ -23,7 +23,9 @@ namespace TourPlanner.BL.Import
             ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<ImportGenerator>();
+
             _tourManager = tourManager;
+            _tourLogManager = tourLogManager;
             _tourGenerator = tourGenerator;
             _repository = repository; // Neu
         }
@@ -70,7 +72,7 @@ namespace TourPlanner.BL.Import
                             totalTime: log.TotalTime,
                             rating: log.Rating
                         ));
-                    }
+                }
                 }
 
                 var savedTour = await _repository.AddTourWithLogsAsync(tour, logs);
@@ -81,7 +83,7 @@ namespace TourPlanner.BL.Import
                 return savedTour;
             }
             catch (OpenRouteServicemanagerException ex)
-            {
+                {
                 _logger.Error($"[ImportTour] Routing failed: {ex.Message}");
                 throw new ImportReturnedNullException("Routing failed", ex.InnerException ?? ex);
             }
@@ -91,20 +93,20 @@ namespace TourPlanner.BL.Import
                 throw new PostgresDataBaseException("Database update failed", ex);
             }
             catch (ImportReturnedNullException ex)
-            {
+                {
                 _logger.Error($"[ImportTour] Import error: {ex.Message}");
                 throw;
-            }
+                }
             catch (Exception e)
-            {
+                {
                 var innerMessage = e.InnerException?.Message ?? "(no inner exception)";
                 _logger.Error($"Failed to add tour with logs: {e.Message} | INNER: {innerMessage}");
                 throw new PostgresDataBaseException($"Failed to add tour with logs: {innerMessage}", e);
+                }
             }
-        }
 
         private class ImportContainer
-        {
+            {
             [JsonProperty("tour")]
             public Tour? Tour { get; set; }
 

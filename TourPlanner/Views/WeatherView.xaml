@@ -16,44 +16,44 @@
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-        <Border BorderBrush="#3399CC" BorderThickness="1" CornerRadius="8" Padding="10" Margin="10">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
+    <Border BorderBrush="#3399CC" BorderThickness="1" CornerRadius="8" Padding="10" Margin="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" MinWidth="150"/>
                     <ColumnDefinition Width="1.5*" MinWidth="100"/>
-                </Grid.ColumnDefinitions>
+            </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,10">
-                    <TextBlock Text="🌤 Weather" FontSize="20" FontWeight="Bold" Foreground="#3399CC" Margin="0,0,10,0"/>
-                    <TextBlock Text="{Binding Location, FallbackValue='(at Destination)'}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Bottom"/>
-                </StackPanel>
+                <TextBlock Text="🌤 Weather" FontSize="20" FontWeight="Bold" Foreground="#3399CC" Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding Location, FallbackValue='(at Destination)'}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Bottom"/>
+            </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="0">
-                    <TextBlock Text="Description:" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding Description}" />
+                <TextBlock Text="Description:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Description}" />
 
-                    <TextBlock Text="Temperature:" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding Temperature}" />
+                <TextBlock Text="Temperature:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Temperature}" />
 
-                    <TextBlock Text="Precipitation:" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding Precipitation}" />
+                <TextBlock Text="Precipitation:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Precipitation}" />
 
-                    <TextBlock Text="Wind Speed:" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding WindSpeed}" />
+                <TextBlock Text="Wind Speed:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding WindSpeed}" />
 
-                    <TextBlock Text="Wind Direction:" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding WindDirection}" />
-                </StackPanel>
+                <TextBlock Text="Wind Direction:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding WindDirection}" />
+            </StackPanel>
 
-                <Image Grid.Row="1" Grid.Column="1"
-                       Source="{Binding Icon, Converter={StaticResource PathConverter}}"
+            <Image Grid.Row="1" Grid.Column="1"
+                   Source="{Binding Icon, Converter={StaticResource PathConverter}}"
                        MaxWidth="100" MaxHeight="100"
-                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            </Grid>
-        </Border>
+                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Grid>
+    </Border>
     </ScrollViewer>
 </UserControl>

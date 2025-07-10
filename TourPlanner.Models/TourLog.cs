@@ -2,7 +2,6 @@
 
 namespace TourPlanner.Models
 {
-    [Table("tourlogs")]
     public class TourLog
     {
         [Column("id")]
@@ -13,18 +12,14 @@ namespace TourPlanner.Models
 
         [Column("date")]
         public DateTime Date { get; set; }
-
-        [Column("comment")]
         public string? Comment { get; set; }
-
-        [Column("difficulty")]
         public double? Difficulty { get; set; }
-
-        [Column("totaltime")]
-        public double? TotalTime { get; set; }
-
-        [Column("rating")]
+        public TimeSpan? TotalTime { get; set; }
         public double? Rating { get; set; }
+
+        public double? TotalDistance { get; set; }
+
+        public TourLog() { }
 
         public TourLog(Guid id, Guid tourId, DateTime date, string? comment, double? difficulty, double? totalTime, double? rating)
         {
@@ -35,6 +30,9 @@ namespace TourPlanner.Models
             Difficulty = difficulty;
             TotalTime = totalTime;
             Rating = rating;
+            TotalDistance = totalDistance;
         }
     }
+
+
 }
