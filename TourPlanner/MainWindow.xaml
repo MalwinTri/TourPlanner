@@ -30,9 +30,7 @@
     </Window.Resources>
 
     <Grid>
-        <!-- Hauptinhalte -->
         <DockPanel>
-            <!-- Menüleiste -->
             <Menu DockPanel.Dock="Top" Background="AliceBlue" Foreground="Black">
                 <MenuItem Header="_File">
                     <MenuItem Header="_Import" Command="{Binding ImportCommand}"/>
@@ -46,13 +44,8 @@
                     <MenuItem Header="Edit Tour" Command="{Binding ShowEditTourDialog}"/>
                     <MenuItem Header="Delete Tour" Command="{Binding DeleteTour}"/>
                 </MenuItem>
-                <MenuItem Header="_Options">
-                    <MenuItem Header="Settings" Command="{Binding ShowSettingsCommand}" />
-                    <MenuItem Header="About" Command="{Binding ShowAboutCommand}" />
-                </MenuItem>
             </Menu>
 
-            <!-- Layout -->
             <Grid Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
@@ -82,7 +75,6 @@
             </Grid>
         </DockPanel>
 
-        <!-- ✅ Globales Busy Overlay -->
         <Grid HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
               Background="#7FFFFFFF"

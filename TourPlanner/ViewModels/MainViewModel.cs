@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using TourPlanner.BL;
+using TourPlanner.BL.Enum;
 using TourPlanner.BL.Exceptions;
 using TourPlanner.DAL.Exceptions;
 using TourPlanner.Logging;
@@ -54,6 +55,18 @@ namespace TourPlanner.ViewModels
 
             }
         }
+
+        private string? _imagePath;
+        public string? ImagePath
+        {
+            get => _imagePath;
+            set
+            {
+                _imagePath = value;
+                OnPropertyChanged(); 
+            }
+        }
+
 
         private bool _isBusy;
 
@@ -150,23 +163,40 @@ namespace TourPlanner.ViewModels
                 {
                     IsBusy = true;
                     IsBusyText = "Editing Tour...";
-                    var t = await _tourManager.Edit(tour);
+                    _logger.Debug($"TourEdited event triggered for tour: {tour.Name}");
 
+                    var t = await _tourManager.Edit(tour, edit.Generate);
+
+                    _logger.Debug("TourManager.Edit returned successfully");
+                    _logger.Debug($"New image path from Edit: {t.ImagePath}");
+
+                    TourListViewModel.EditTour(t);
+
+                    // Log before and after resetting preview
+                    _logger.Debug("Resetting TourPreviewViewModel.SelectedTour");
                     TourPreviewViewModel.SelectedTour = null;
                     TourPreviewViewModel.SelectedTour = t;
                     IsBusy = false;
 
-                    if (t == null)
+                    _logger.Debug("Assigning updated tour to TourPreviewViewModel");
+                    TourPreviewViewModel.SelectedTour = new Tour(
+                        t.Id, t.Name, t.Description, t.From, t.To, t.Transport!
+                    )
                     {
-                        NavigationService?.ShowMessageBox("Tour could not be edited", "Error");
-                        return;
-                    }
+                        Time = t.Time,
+                        Distance = t.Distance,
+                        Popularity = t.Popularity,
+                        ChildFriendliness = t.ChildFriendliness,
+                        ImagePath = t.ImagePath,
+                        StartCoordinates = t.StartCoordinates,
+                        EndCoordinates = t.EndCoordinates
+                    };
 
-                    TourListViewModel.EditTour(t);
+                    _logger.Debug("Preview updated after edit");
                 }
                 catch (PostgresDataBaseException e)
                 {
-                    _logger.Error("Tour could not be added");
+                    _logger.Error("Tour could not be updated (Postgres)");
                     _logger.Error(e.Message);
                     NavigationService?.ShowMessageBox("Tour could not be added", "Error");
                     IsBusy = false;
@@ -176,7 +206,11 @@ namespace TourPlanner.ViewModels
                     _logger.Error("Tour could not be retrieved from OpenRouteService");
                     _logger.Error(e.Message);
                     NavigationService?.ShowMessageBox("Tour could not be retrieved from OpenRouteService", "Error");
+                }
+                finally
+                {
                     IsBusy = false;
+                    _logger.Debug("IsBusy reset after tour edit");
                 }
 
             };
@@ -199,7 +233,7 @@ namespace TourPlanner.ViewModels
                 {
                     IsBusy = true;
                     IsBusyText = "Adding Tour Log...";
-                    _tourLogManager.Add(tourLog);
+                    _tourLogManager.AddAsync(tourLog);
                     IsBusy = false;
                 }
                 catch (PostgresDataBaseException e)

@@ -1,0 +1,21 @@
+{
+  "tour": {
+    "Name": "Test",
+    "Description": "Beschreibung",
+    "From": "Wien",
+    "To": "Linz",
+    "Transport": "Car",
+    "Distance": 123.45,
+    "Time": 678,
+    "ImagePath": "file:///C:/..."
+  },
+  "tourLogs": [
+    {
+      "Date": "2025-07-01T12:00:00",
+      "Comment": "Test log",
+      "Difficulty": 3,
+      "TotalTime": 120,
+      "Rating": 4
+    }
+  ]
+}

@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Runtime.Versioning;
 using System.Text.Json;
 using TourPlanner.BL.Exceptions;
+using TourPlanner.BL.Mapquest;
 using TourPlanner.BL.OpenRouteService.DTO;
 using TourPlanner.Logging;
 using TourPlanner.Models;
@@ -16,51 +17,61 @@ namespace TourPlanner.BL.OpenRouteService
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger _logger;
-        private readonly string _imagePath;
+        private readonly IMapImageService _mapImageService;
         private readonly string _apiKey;
 
-        public OpenRouteServiceTourGenerator(IOpenRouteServiceConfiguration config, ILoggerFactory loggerFactory)
+        public OpenRouteServiceTourGenerator(
+            IOpenRouteServiceConfiguration orsConfig,
+            IMapImageService mapImageService,
+            ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<OpenRouteServiceTourGenerator>();
 
             _httpClient = new HttpClient
             {
-                BaseAddress = new Uri(config.OpenRouteServiceApiUrl)
+                BaseAddress = new Uri(orsConfig.OpenRouteServiceApiUrl)
             };
 
-            _imagePath = config.ImagePath;
-            _apiKey = config.ApiKey;
+            _apiKey = orsConfig.ApiKey;
+            _mapImageService = mapImageService;
         }
 
         public async Task<Tour?> GenerateTourFromTourAsync(Tour tour)
         {
-            EnsureImageDirectoryExists();
-
             try
             {
                 if (string.IsNullOrWhiteSpace(tour.From) || string.IsNullOrWhiteSpace(tour.To))
-                {
-                    _logger.Error("Tour.From or Tour.To is null or empty.");
                     throw new OpenRouteServicemanagerException("Start or destination location is missing.");
-                }
 
-                _logger.Warning($"[Start] Generating tour: {tour.Name} ({tour.From} → {tour.To})");
+                _logger.Warning($"[GenerateTour] Request for '{tour.Name}' from '{tour.From}' to '{tour.To}'");
 
+                // 1. Geocode Start/End
                 tour.StartCoordinates = await GetCoordinatesAsync(tour.From!);
-                _logger.Debug($"[Coordinates] From '{tour.From}' → {string.Join(", ", tour.StartCoordinates)}");
-
                 tour.EndCoordinates = await GetCoordinatesAsync(tour.To!);
-                _logger.Debug($"[Coordinates] To   '{tour.To}' → {string.Join(", ", tour.EndCoordinates)}");
+                _logger.Debug($"StartCoords: {string.Join(", ", tour.StartCoordinates)}");
+                _logger.Debug($"EndCoords: {string.Join(", ", tour.EndCoordinates)}");
 
+                // 2. Select Profile (driving, walking etc.)
+                var profile = tour.Transport?.ToLower() switch
+                {
+                    "car" => "driving-car",
+                    "bike" or "bicycle" => "cycling-regular",
+                    "walk" or "walking" => "foot-walking",
+                    _ => "driving-car"
+                };
+
+                // 3. Build ORS Request
                 var requestBody = new
                 {
-                    coordinates = new[] { tour.StartCoordinates, tour.EndCoordinates }
+                    coordinates = new[]
+                    {
+                        new[] { tour.StartCoordinates[0], tour.StartCoordinates[1] },
+                        new[] { tour.EndCoordinates[0], tour.EndCoordinates[1] }
+                    }
                 };
 
                 var requestJson = JsonSerializer.Serialize(requestBody);
-                _logger.Debug($"[Request JSON] {requestJson}");
-
-                var request = new HttpRequestMessage(HttpMethod.Post, "v2/directions/driving-car")
+                var request = new HttpRequestMessage(HttpMethod.Post, $"v2/directions/{profile}")
                 {
                     Content = new StringContent(requestJson)
                 };
@@ -68,146 +79,71 @@ namespace TourPlanner.BL.OpenRouteService
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
                 request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-                _logger.Warning("[HTTP] Sending directions request...");
+                _logger.Debug($"[ORS] Profile: {profile}");
+                _logger.Debug($"[ORS] JSON: {requestJson}");
 
+                // 4. Call ORS
                 var response = await _httpClient.SendAsync(request);
                 await EnsureSuccessOrThrow(response, "Directions API");
 
                 var responseJson = await response.Content.ReadAsStringAsync();
-                _logger.Debug($"[HTTP Response JSON] {responseJson}");
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var routeResponse = JsonSerializer.Deserialize<ORSRouteResponse>(responseJson, options);
 
-                var routeResponse = JsonSerializer.Deserialize<ORSRouteResponse>(responseJson);
+                _logger.Warning($"[ORS RAW RESPONSE] {responseJson}");
 
-                if (routeResponse == null || routeResponse.Routes == null)
-                {
-                    _logger.Error("[Deserialization] ORSRouteResponse is null.");
-                    throw new OpenRouteServicemanagerException("Failed to parse directions response.");
-                }
-
-                var summary = routeResponse.Routes.FirstOrDefault()?.Summary;
+                var summary = routeResponse?.Routes?.FirstOrDefault()?.Summary;
 
                 if (summary == null)
-                {
-                    _logger.Error("[ORS] No summary in response.");
-                    throw new OpenRouteServicemanagerException("ORS response contains no route summary.");
-                }
+                    throw new OpenRouteServicemanagerException("No summary in ORS response");
 
-                tour.Distance = summary.Distance / 1000.0;
-                tour.Time = summary.Duration / 60.0;
+                // 5. Parse & set
+                tour.Distance = Math.Round(summary.Distance / 1000.0, 2);     // in km
+                tour.Time = Math.Round(summary.Duration, 2);  //  Minuten                                                                    // in Minuten
 
-                _logger.Warning($"[Result] Distance: {tour.Distance} km, Time: {tour.Time} min");
+                _logger.Warning($"[Routing Done] Distance: {tour.Distance} km | Time: {tour.Time} min");
 
-                var imageSuccess = await LoadImage(tour);
-                if (!imageSuccess)
-                {
-                    _logger.Warning("[Image] Map image could not be downloaded.");
-                }
+                // 6. Load static map image
+                await _mapImageService.LoadImage(tour);
 
-                _logger.Warning("[Success] Tour generated successfully.");
-                _logger.Warning($"[Tour Result] ImagePath: {tour.ImagePath}");
                 return tour;
             }
             catch (Exception ex)
             {
-                _logger.Error("=== ERROR in GenerateTourFromTourAsync ===");
-                _logger.Error($"Message: {ex.Message}");
-                _logger.Error($"StackTrace: {ex.StackTrace}");
-                _logger.Error($"InnerException: {ex.InnerException?.Message}");
-
-                throw new OpenRouteServicemanagerException("Tour could not be retrieved from OpenRouteService", ex);
+                _logger.Error($"[GenerateTour] ERROR: {ex.Message}\n{ex.StackTrace}");
+                throw new OpenRouteServicemanagerException("Failed to generate tour", ex);
             }
         }
 
-
         private async Task<List<double>> GetCoordinatesAsync(string location)
         {
-            var encodedLocation = Uri.EscapeDataString(location);
-            var url = $"geocode/search?text={encodedLocation}&size=1";
-
-            _logger.Debug($"Calling ORS Geocoding API: {url}");
-
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            var encoded = Uri.EscapeDataString(location);
+            var request = new HttpRequestMessage(HttpMethod.Get, $"geocode/search?text={encoded}&size=1");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
 
             var response = await _httpClient.SendAsync(request);
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                _logger.Error($"Geocoding API error: {response.StatusCode} - {error}");
-                throw new OpenRouteServicemanagerException($"Geocoding failed for: {location}");
-            }
+            await EnsureSuccessOrThrow(response, "Geocoding API");
 
             var json = await response.Content.ReadAsStringAsync();
-            var jsonDoc = JsonDocument.Parse(json);
-            var featuresJson = jsonDoc.RootElement.GetProperty("features").GetRawText();
-            var result = JsonSerializer.Deserialize<List<GeocodeFeature>>(featuresJson);
 
+            var doc = JsonDocument.Parse(json);
+            var featuresJson = doc.RootElement.GetProperty("features").GetRawText();
+            var result = JsonSerializer.Deserialize<List<GeocodeFeature>>(featuresJson);
 
             var coordinates = result?.FirstOrDefault()?.Geometry?.Coordinates;
 
             if (coordinates == null || coordinates.Count < 2)
-            {
-                throw new OpenRouteServicemanagerException($"No coordinates found for location: {location}");
+                throw new Exception("Coordinates not found");
+
+            return new List<double> { coordinates[0], coordinates[1] }; // [lon, lat] 
             }
 
-            return coordinates;
-        }
         private async Task EnsureSuccessOrThrow(HttpResponseMessage response, string context)
         {
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
-                _logger.Error($"{context} API error: {response.StatusCode} - {error}");
-                throw new OpenRouteServicemanagerException($"{context} API returned an error.");
-            }
-        }
-
-        private void EnsureImageDirectoryExists()
-        {
-            if (!Directory.Exists(_imagePath))
-            {
-                Directory.CreateDirectory(_imagePath);
-                _logger.Debug($"Created image directory: {_imagePath}");
-            }
-        }
-
-        public async Task<bool> LoadImage(Tour tour, string? sessionId = null)
-        {
-            try
-            {
-                Stream imageStream;
-                if (sessionId == null)
-                {
-                    var start =
-                        $"{tour.StartCoordinates[0].ToString(CultureInfo.InvariantCulture)},{tour.StartCoordinates[1].ToString(CultureInfo.InvariantCulture)}";
-                    var end = $"{tour.EndCoordinates[0].ToString(CultureInfo.InvariantCulture)},{tour.EndCoordinates[1].ToString(CultureInfo.InvariantCulture)}";
-
-                    imageStream = await _httpClient.GetStreamAsync($"staticmap/v5/map?key={_apiKey}&start={start}&end={end}&size=600,400@2x");
-                }
-                else
-                {
-                    imageStream = await _httpClient.GetStreamAsync($"staticmap/v5/map?key={_apiKey}&session={sessionId}&size=600,400@2x");
-                }
-
-                _logger.Debug($"Mapquest returned image stream");
-
-                var image = Image.FromStream(imageStream);
-                if (File.Exists(_imagePath + $"{tour.Name}.Jpeg"))
-                {
-                    File.Delete(_imagePath + $"{tour.Name}.Jpeg");
-                }
-                image.Save(_imagePath + $"{tour.Name}.Jpeg", ImageFormat.Jpeg);
-                tour.ImagePath = _imagePath + $"{tour.Name}.Jpeg";
-
-                _logger.Debug($"Mapquest image saved to {_imagePath + $"{tour.Name}.Jpeg"}");
-
-                return true;
-            }
-            catch (Exception e)
-            {
-
-                Console.WriteLine(e);
-                throw;
+                throw new OpenRouteServicemanagerException($"{context} API error: {response.StatusCode} - {error}");
             }
         }
     }

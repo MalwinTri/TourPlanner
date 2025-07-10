@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TourPlanner.Models;
+﻿using TourPlanner.Models;
 
 namespace TourPlanner.DAL
 {
     public interface ITourPlannerRepository
     {
-        Tour Add(Tour tour);
+        Task<Tour> AddAsync(Tour tour);
         Tour? Edit(Tour tour);
         bool Remove(Tour tour);
-        TourLog? Add(TourLog tourLog);
+        Task<TourLog?> AddAsync(TourLog tourLog);
+        Task<Tour> AddTourWithLogsAsync(Tour tour, List<TourLog> tourLogs);
         TourLog? Edit(TourLog tourLog);
         bool Remove(TourLog tourLog);
 

@@ -8,12 +8,10 @@
              Background="AliceBlue">
 
     <UserControl.Resources>
-        <!-- Icon resources -->
         <BitmapImage x:Key="AddImage" UriSource="../Picture/Addimage.png" />
         <BitmapImage x:Key="EditImage" UriSource="../Picture/Editimage.png" />
         <BitmapImage x:Key="DeleteImage" UriSource="../Picture/Deleteimage.png" />
 
-        <!-- Unified Button Style -->
         <Style TargetType="Button">
             <Setter Property="Background" Value="#3399CC"/>
             <Setter Property="Foreground" Value="White"/>
@@ -40,12 +38,10 @@
 
     <Grid>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0">
-            <!-- Header -->
             <Border Background="#3399CC" CornerRadius="8" Padding="8" Margin="0 0 0 20">
                 <Label Content="Tour Menu" FontWeight="Bold" FontSize="16" Foreground="White" HorizontalAlignment="Center"/>
             </Border>
 
-            <!-- Buttons -->
             <Button Command="{Binding ShowAddTourDialog}">
                 <Image Source="{StaticResource AddImage}" Stretch="Uniform" Width="24" Height="24"/>
             </Button>

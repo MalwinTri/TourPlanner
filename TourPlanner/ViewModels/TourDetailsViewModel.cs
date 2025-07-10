@@ -19,6 +19,7 @@ namespace TourPlanner.ViewModels
         private readonly ITourPlannerManager _tourManager;
 
         private Weather? _weather;
+        private string? _tourImagePath;
 
         public ICommand CloseCommand { get; }
         public ICommand AddLogCommand { get; }
@@ -32,6 +33,22 @@ namespace TourPlanner.ViewModels
             set
             {
                 _selectedTour = value;
+                OnPropertyChanged();
+
+                if (_selectedTour != null)
+                {
+                    // Bildpfad aktualisieren (mit Cache-Busting)
+                    TourImagePath = $"{_selectedTour.ImagePath}?{DateTime.Now.Ticks}";
+            }
+        }
+        }
+
+        public string? TourImagePath
+        {
+            get => _tourImagePath;
+            set
+            {
+                _tourImagePath = value;
                 OnPropertyChanged();
             }
         }
@@ -74,7 +91,7 @@ namespace TourPlanner.ViewModels
                 }
                 var tourLogs = _tourLogManager.FindMatchingTourLogs(SelectedTour).ToList();
 
-
+                var tourLogs = _tourLogManager.FindMatchingTourLogs(SelectedTour).ToList();
                 TourLogs.Clear();
                 tourLogs.ForEach(j => TourLogs.Add(j));
 
@@ -123,7 +140,12 @@ namespace TourPlanner.ViewModels
             }
         }
 
-        public TourDetailsViewModel(ILoggerFactory loggerFactory, ITourPlannerLogManager tourLogManager, IWeatherGenerator weatherGenerator, Tour selectedTour, ITourPlannerManager tourManager)
+        public TourDetailsViewModel(
+            ILoggerFactory loggerFactory,
+            ITourPlannerLogManager tourLogManager,
+            IWeatherGenerator weatherGenerator,
+            Tour selectedTour,
+            ITourPlannerManager tourManager)
         {
             _logger = loggerFactory.CreateLogger<TourDetailsViewModel>();
 
@@ -137,10 +159,7 @@ namespace TourPlanner.ViewModels
 
             SetTourLogs();
 
-            CloseCommand = new RelayCommand((_) =>
-            {
-                NavigationService?.Close();
-            });
+            CloseCommand = new RelayCommand((_) => NavigationService?.Close());
 
             AddLogCommand = new RelayCommand((_) =>
             {
@@ -149,12 +168,9 @@ namespace TourPlanner.ViewModels
                     CorrespondingTour = SelectedTour
                 };
 
-                tourLogViewModel!.TourLogAdded += async (_, tourLog) =>
-                {
-                    try
+                tourLogViewModel.TourLogAdded += async (_, tourLog) =>
                     {
-                        tourLogManager.Add(tourLog);
-                    }
+                    try { await tourLogManager.AddAsync(tourLog); }
                     catch (PostgresDataBaseException e)
                     {
                         _logger.Error(e.Message);
@@ -182,12 +198,9 @@ namespace TourPlanner.ViewModels
                     Usecase = "Edit Tour Log"
                 };
 
-                tourLogViewModel!.TourLogEdited += async (_, tourLog) =>
-                {
-                    try
+                tourLogViewModel.TourLogEdited += async (_, tourLog) =>
                     {
-                        tourLogManager.Edit(tourLog);
-                    }
+                    try { tourLogManager.Edit(tourLog); }
                     catch (PostgresDataBaseException e)
                     {
                         _logger.Error(e.Message);
@@ -195,6 +208,7 @@ namespace TourPlanner.ViewModels
                         NavigationService?.ShowMessageBox("Error with Tour logs", "Error");
                         NavigationService?.Close();
                     }
+
                     SetTourLogs();
                     await EditTour();
 
@@ -207,11 +221,8 @@ namespace TourPlanner.ViewModels
 
             DeleteLogCommand = new RelayCommand(async (_) =>
             {
-                Guid id = SelectedTourLog!.Id;
-                try
-                {
-                    tourLogManager.Delete(SelectedTourLog!);
-                }
+                var id = SelectedTourLog!.Id;
+                try { tourLogManager.Delete(SelectedTourLog!); }
                 catch (PostgresDataBaseException e)
                 {
                     _logger.Error(e.Message);
@@ -229,6 +240,7 @@ namespace TourPlanner.ViewModels
 
             _logger.Debug($"TourDetailsViewModel created for Tour with ID ({SelectedTour.Id})");
         }
+
         private async void LoadWeather()
         {
             try
@@ -251,9 +263,9 @@ namespace TourPlanner.ViewModels
                 }
 
                 Weather.Location = SelectedTour.To;
-                var weatherTemp = Weather;
+                var temp = Weather;
                 Weather = null;
-                Weather = weatherTemp;
+                Weather = temp;
             }
             catch (WeatherApiReturnedNullException e)
             {

@@ -1,0 +1,24 @@
+{
+  "tour": {
+    "Id": "cdd7e1e3-c818-415e-935b-6df6ba7aa6eb",
+    "Name": "Tour",
+    "Description": "Graz",
+    "From": "Graz ",
+    "To": "Salzburg",
+    "Transport": "Car",
+    "Distance": 281.05,
+    "Time": 174.1,
+    "ImagePath": "file:///C:/Users/malwi/source/TourPlanner/TourPlanner/bin/Debug/net8.0-windows/images/Tour.jpeg",
+    "Popularity": 1.0,
+    "ChildFriendliness": 0.0,
+    "StartCoordinates": [
+      15.432739,
+      47.065852
+    ],
+    "EndCoordinates": [
+      12.995288,
+      47.82287
+    ]
+  },
+  "tourLogs": []
+}

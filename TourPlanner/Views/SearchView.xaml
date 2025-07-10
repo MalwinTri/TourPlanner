@@ -9,7 +9,6 @@
              Background="AliceBlue">
 
     <UserControl.Resources>
-        <!-- Style für Button -->
         <Style TargetType="Button">
             <Setter Property="Background" Value="#3399CC"/>
             <Setter Property="Foreground" Value="White"/>

@@ -25,7 +25,11 @@ namespace TourPlanner.BL.iText
 
             _tourManager = tourManager;
             _logManager = logManager;
-            _targetPath = configuration.OutputPath;
+
+            var baseDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\.."));
+            _targetPath = Path.Combine(baseDir, "Reports");
+
+            _logger.Debug($"[iText] Reports will be stored in: {_targetPath}");
         }
 
         public bool GenerateReport(Tour tour)
@@ -33,19 +37,24 @@ namespace TourPlanner.BL.iText
             try
             {
                 _logger.Debug($"Generating report for tour {tour.Name}");
+
                 if (!Directory.Exists(_targetPath))
                 {
                     Directory.CreateDirectory(_targetPath);
                     _logger.Debug($"Created directory {_targetPath}");
                 }
 
-                var targetPdf = $"{_targetPath}{tour.Name}.pdf";
+                var fileName = $"{tour.Name}.pdf";
+                var targetPdf = Path.Combine(_targetPath, fileName);
 
                 if (File.Exists(targetPdf))
                 {
-                    targetPdf = $"{_targetPath}{tour.Name}-{DateTime.Now:yyyyMMddHHmmss}.pdf";
-                    _logger.Debug($"File already exists, creating new file at {targetPdf}");
+                    fileName = $"{tour.Name}-{DateTime.Now:yyyyMMddHHmmss}.pdf";
+                    targetPdf = Path.Combine(_targetPath, fileName);
+                    _logger.Debug($"File already exists, creating new file: {targetPdf}");
                 }
+
+                _logger.Debug($"[iText] Writing PDF to: {targetPdf}");
 
                 var writer = new PdfWriter(targetPdf);
                 var pdf = new PdfDocument(writer);
@@ -165,20 +174,23 @@ namespace TourPlanner.BL.iText
                     _logger.Debug($"Created directory {_targetPath}");
                 }
 
-
-                var tours = _tourManager.FindMatchingTours().ToList();
-
-                var targetPdf = $"{_targetPath}toursummary.pdf";
+                var fileName = "toursummary.pdf";
+                var targetPdf = Path.Combine(_targetPath, fileName);
 
                 if (File.Exists(targetPdf))
                 {
-                    targetPdf = $"{_targetPath}toursummary-{DateTime.Now:yyyyMMddHHmmss}.pdf";
-                    _logger.Debug($"File already exists, creating new file at {targetPdf}");
+                    fileName = $"toursummary-{DateTime.Now:yyyyMMddHHmmss}.pdf";
+                    targetPdf = Path.Combine(_targetPath, fileName);
+                    _logger.Debug($"File already exists, creating new file: {targetPdf}");
                 }
+
+                _logger.Debug($"[iText] Writing summary PDF to: {targetPdf}");
 
                 var writer = new PdfWriter(targetPdf);
                 var pdf = new PdfDocument(writer);
                 var document = new Document(pdf);
+
+                var tours = _tourManager.FindMatchingTours().ToList();
 
                 foreach (var tour in tours)
                 {

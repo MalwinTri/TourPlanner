@@ -8,7 +8,6 @@
              Background="AliceBlue">
 
     <UserControl.Resources>
-        <!-- Überschrift-Stil -->
         <Style TargetType="Border" x:Key="HeaderBorderStyle">
             <Setter Property="Background" Value="#3399CC"/>
             <Setter Property="CornerRadius" Value="5"/>
@@ -16,7 +15,6 @@
             <Setter Property="Margin" Value="5"/>
         </Style>
 
-        <!-- Listenanzeige-Stil -->
         <Style TargetType="ListView">
             <Setter Property="Margin" Value="10"/>
             <Setter Property="FontSize" Value="14"/>
@@ -42,13 +40,11 @@
             <Label Content="Tour List" FontSize="18" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
         </Border>
 
-        <!-- Tour-Liste -->
-        <ListView Grid.Row="1" Name="ListView" ItemsSource="{Binding Tours}" SelectedItem="{Binding SelectedTour, Mode=TwoWay}">
-            <ListView.Template>
-                <ControlTemplate>
-                    <ItemsPresenter/>
-                </ControlTemplate>
-            </ListView.Template>
+        <ListView Grid.Row="1"
+          Name="ListView"
+          ItemsSource="{Binding Tours}"
+          SelectedItem="{Binding SelectedTour, Mode=TwoWay}"
+          ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="5">

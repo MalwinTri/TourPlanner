@@ -1,14 +1,20 @@
 ﻿using Microsoft.Extensions.Configuration;
 using TourPlanner.BL.Export;
 using TourPlanner.BL.iText;
+using TourPlanner.BL.Mapquest;
 using TourPlanner.BL.OpenRouteService;
 using TourPlanner.BL.WeatherAPI;
 using TourPlanner.DAL.Postgres;
 
 namespace TourPlanner.Configuration
 {
-    internal class AppConfiguration : IOpenRouteServiceConfiguration, ITourPlannerPostgresRepositoryConfiguration,
-        IItextConfiguration, IWeatherApiConfiguration, IExportConfiguration
+    internal class AppConfiguration :
+        IOpenRouteServiceConfiguration,
+        IMapquestConfiguration, 
+        ITourPlannerPostgresRepositoryConfiguration,
+        IItextConfiguration,
+        IWeatherApiConfiguration,
+        IExportConfiguration
     {
         private readonly IConfiguration _configuration;
 
@@ -22,7 +28,11 @@ namespace TourPlanner.Configuration
         public string OpenRouteServiceApiUrl => _configuration["openrouteservice:baseurl"]
             ?? throw new InvalidOperationException("Missing ORS baseurl in configuration.");
         public string ApiKey => _configuration["openrouteservice:apikey"]!;
-        string IOpenRouteServiceConfiguration.ImagePath => _configuration["openrouteservice:imagepath"]!;
+
+        // Mapquest 
+        public string MapquestApiKey => _configuration["mapquest:apikey"]!;
+        public string MapquestApiUrl => _configuration["mapquest:baseurl"]!;
+        public string ImagePath => _configuration["mapquest:imagepath"]!;
 
         // Postgres
         public string ConnectionString => _configuration["postgres:connectionstring"]!;

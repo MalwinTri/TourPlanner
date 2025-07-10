@@ -3,6 +3,9 @@ using TourPlanner.Logging;
 using TourPlanner.Models;
 using Newtonsoft.Json;
 using TourPlanner.BL.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using TourPlanner.DAL.Exceptions;
+using TourPlanner.DAL;
 
 namespace TourPlanner.BL.Import
 {
@@ -10,80 +13,105 @@ namespace TourPlanner.BL.Import
     {
         private readonly ILogger _logger;
         private readonly ITourPlannerManager _tourManager;
-        private readonly ITourPlannerLogManager _tourLogManager;
         private readonly ITourPlannerGenerator _tourGenerator;
+        private readonly ITourPlannerRepository _repository; // Neu
 
-        public ImportGenerator(ITourPlannerManager tourManager, ITourPlannerLogManager tourLogManager, ITourPlannerGenerator tourGenerator, ILoggerFactory loggerFactory)
+        public ImportGenerator(
+            ITourPlannerManager tourManager,
+            ITourPlannerGenerator tourGenerator,
+            ITourPlannerRepository repository, // Neu
+            ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger<ImportGenerator>();
 
             _tourManager = tourManager;
             _tourLogManager = tourLogManager;
             _tourGenerator = tourGenerator;
+            _repository = repository; // Neu
         }
 
         public async Task<Tour> ImportTour(string tourPath)
         {
             try
             {
-                var existingTours = _tourManager.FindMatchingTours();
+                _logger.Debug($"[ImportTour] Starting import from: {tourPath}");
 
-                // Read the JSON file
                 var json = await File.ReadAllTextAsync(tourPath);
+                if (string.IsNullOrWhiteSpace(json))
+                    throw new ImportReturnedNullException("Import file is empty.");
 
-                // Deserialize the JSON into objects
-                var deserializedObject = JsonConvert.DeserializeObject<dynamic>(json);
+                var importData = JsonConvert.DeserializeObject<ImportContainer>(json);
+                if (importData?.Tour == null)
+                    throw new ImportReturnedNullException("Tour is missing in import file.");
 
-                if (deserializedObject == null)
+                var tour = importData.Tour;
+
+                if (tour.Id == Guid.Empty)
+                    tour.Id = Guid.NewGuid();
+
+                var existingTours = _tourManager.FindMatchingTours();
+                var baseName = tour.Name;
+                int counter = 1;
+                while (existingTours.Any(t => t.Name == tour.Name))
+                    tour.Name = $"{baseName} ({counter++})";
+
+                await _tourGenerator.GenerateTourFromTourAsync(tour);
+
+                // Logs vorbereiten
+                var logs = new List<TourLog>();
+                if (importData.TourLogs?.Any() == true)
                 {
-                    _logger.Error("Deserialized object is null");
-                    throw new ImportReturnedNullException("Deserialized object is null");
+                    foreach (var log in importData.TourLogs)
+                    {
+                        logs.Add(new TourLog(
+                            id: Guid.NewGuid(),
+                            tourId: tour.Id,
+                            date: log.Date.ToUniversalTime(),
+                            comment: log.Comment,
+                            difficulty: log.Difficulty,
+                            totalTime: log.TotalTime,
+                            rating: log.Rating
+                        ));
+                }
                 }
 
-                Tour tourObject = deserializedObject.tour.ToObject<Tour>();
+                var savedTour = await _repository.AddTourWithLogsAsync(tour, logs);
+                if (savedTour == null || savedTour.Id == Guid.Empty)
+                    throw new ImportReturnedNullException("Tour was not properly saved to DB.");
 
-                if (tourObject == null)
-                {
-                    _logger.Error("Tour is null");
-                    throw new ImportReturnedNullException("Tour is null");
-                }
-
-                if (existingTours.Any(t => t.Name == tourObject.Name))
-                {
-                    _logger.Error("Tour already exists");
-                    throw new DuplicateNameException("Tour already exists");
-                }
-
-                await _tourGenerator.LoadImage(tourObject);
-                await _tourManager.Add(tourObject);
-
-                List<TourLog> tourLogObject = deserializedObject.tourLogs.ToObject<List<TourLog>>();
-
-                tourLogObject ??= new List<TourLog>();
-
-                foreach (var tourLog in tourLogObject)
-                {
-                    _tourLogManager.Add(tourLog);
-                }
-
-                return tourObject;
+                _logger.Debug($"[ImportTour] Tour with logs saved. ID: {savedTour.Id}");
+                return savedTour;
             }
-            catch (OpenRouteServicemanagerException e)
-            {
-                _logger.Error("OpenRouteService error");
-                if (e.InnerException != null)
+            catch (OpenRouteServicemanagerException ex)
                 {
-                    throw new ImportReturnedNullException("OpenRouteService error", e.InnerException);
-                }
-                else
-                {
-                    throw new ImportReturnedNullException("OpenRouteService error", e);
-                }
+                _logger.Error($"[ImportTour] Routing failed: {ex.Message}");
+                throw new ImportReturnedNullException("Routing failed", ex.InnerException ?? ex);
             }
-            catch (Exception)
+            catch (DbUpdateException ex)
             {
+                _logger.Error($"[ImportTour] DB update failed: {ex.InnerException?.Message ?? ex.Message}");
+                throw new PostgresDataBaseException("Database update failed", ex);
+            }
+            catch (ImportReturnedNullException ex)
+                {
+                _logger.Error($"[ImportTour] Import error: {ex.Message}");
                 throw;
+                }
+            catch (Exception e)
+                {
+                var innerMessage = e.InnerException?.Message ?? "(no inner exception)";
+                _logger.Error($"Failed to add tour with logs: {e.Message} | INNER: {innerMessage}");
+                throw new PostgresDataBaseException($"Failed to add tour with logs: {innerMessage}", e);
+                }
             }
+
+        private class ImportContainer
+            {
+            [JsonProperty("tour")]
+            public Tour? Tour { get; set; }
+
+            [JsonProperty("tourLogs")]
+            public List<TourLog>? TourLogs { get; set; }
         }
     }
 }

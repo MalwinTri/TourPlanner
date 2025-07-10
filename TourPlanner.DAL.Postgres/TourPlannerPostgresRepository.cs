@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using System.Text.RegularExpressions;
 using TourPlanner.DAL.Exceptions;
 using TourPlanner.Logging;
@@ -26,13 +27,13 @@ namespace TourPlanner.DAL.Postgres
             context.Database.EnsureCreated();
         }
 
-        public Tour Add(Tour tour)
+        public async Task<Tour> AddAsync(Tour tour)
         {
             try
             {
-                using var context = new TourPlannerDbContext(_connectionString);
-                context.Add(tour);
-                context.SaveChanges();
+                await using var context = new TourPlannerDbContext(_connectionString);
+                await context.Tours.AddAsync(tour);
+                await context.SaveChangesAsync();
 
                 _logger.Debug($"Added tour {tour.Name} with ID ({tour.Id})");
                 return tour;
@@ -44,13 +45,13 @@ namespace TourPlanner.DAL.Postgres
             }
         }
 
-        public TourLog? Add(TourLog tourLog)
+        public async Task<TourLog?> AddAsync(TourLog tourLog)
         {
             try
             {
-                using var context = new TourPlannerDbContext(_connectionString);
-                context.Add(tourLog);
-                context.SaveChanges();
+                await using var context = new TourPlannerDbContext(_connectionString);
+                await context.TourLogs.AddAsync(tourLog);  // asynchron hinzufügen
+                await context.SaveChangesAsync();          // Änderungen asynchron speichern
 
                 _logger.Debug($"Added tour log with ID ({tourLog.Id})");
                 return tourLog;
@@ -61,6 +62,7 @@ namespace TourPlanner.DAL.Postgres
                 throw new PostgresDataBaseException("Adding error", e);
             }
         }
+
 
         public Tour? Edit(Tour tour)
         {
@@ -206,17 +208,30 @@ namespace TourPlanner.DAL.Postgres
             {
                 using var context = new TourPlannerDbContext(_connectionString);
                 var t = context.Tours.Find(tour.Id);
-                if (t == null) return false;
-                if (!RemoveImage(t)) return false;
-                context.Tours.Remove(t);
-                context.SaveChanges();
 
-                _logger.Debug($"Removed tour {tour.Name} with ID ({tour.Id})");
-                return true;
+                if (t == null)
+                {
+                    _logger.Warning($"[Repository.Remove] Tour not found in DB: {tour.Id}");
+                    return false;
+                }
+
+                _logger.Debug($"[Repository.Remove] Found tour in DB, attempting to delete image...");
+
+                if (!RemoveImage(t))
+                {
+                    _logger.Warning($"[Repository.Remove] Image deletion failed for tour: {tour.Id}");
+                }
+
+                context.Tours.Remove(t);
+                var affected = context.SaveChanges();
+
+                _logger.Debug($"[Repository.Remove] SaveChanges affected rows: {affected}");
+
+                return affected > 0;
             }
             catch (Exception e)
             {
-                _logger.Error($"Failed to remove tour {tour.Name} with ID ({tour.Id})");
+                _logger.Error($"[Repository.Remove] Failed to remove tour: {e.Message}");
                 throw new PostgresDataBaseException("Removing error", e);
             }
         }
@@ -243,10 +258,79 @@ namespace TourPlanner.DAL.Postgres
 
         private static bool RemoveImage(Tour tour)
         {
-            var path = tour.ImagePath;
-            if (path == null) return true;
+            try
+            {
+                if (string.IsNullOrWhiteSpace(tour.ImagePath))
+                    return true;
+
+                var path = new Uri(tour.ImagePath).LocalPath;
+                if (File.Exists(path))
+                {
             File.Delete(path);
+                }
+
+                tour.ImagePath = null;
+
             return true;
         }
+            catch (IOException ex)
+            {
+                // Datei kann nicht gelöscht werden, vermutlich noch im Zugriff
+                Console.WriteLine($"[RemoveImage] Could not delete image file: {ex.Message}");
+                return false; // Optional: Oder true, wenn das Löschen nicht kritisch ist
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[RemoveImage] Unexpected error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<Tour> AddTourWithLogsAsync(Tour tour, List<TourLog> tourLogs)
+        {
+            try
+            {
+                await using var context = new TourPlannerDbContext(_connectionString);
+
+                // Sicherstellen, dass die Tour eine ID hat
+                if (tour.Id == Guid.Empty)
+                    tour.Id = Guid.NewGuid();
+
+                await context.Tours.AddAsync(tour);
+                await context.SaveChangesAsync(); // wichtig: FK muss gültig sein, also zuerst speichern
+
+                foreach (var log in tourLogs)
+                {
+                    if (log.Id == Guid.Empty)
+                        log.Id = Guid.NewGuid();
+
+                    log.TourId = tour.Id; // FK setzen
+                    await context.TourLogs.AddAsync(log);
+                }
+
+                try
+                {
+                    await context.SaveChangesAsync();
+                }
+                catch (DbUpdateException ex)
+                {
+                    // Das zeigt uns die tatsächliche Ursache (z. B. NULL constraint, FK-Verletzung etc.)
+                    _logger.Error($"Failed to save changes: {ex.Message}\n{ex.StackTrace}");
+                    _logger.Error($"Failed to add tour with logs: {ex.Message} | INNER: {ex.InnerException?.Message}");
+                    throw new PostgresDataBaseException("Failed to add tour with logs", ex);
+                }
+
+
+                _logger.Debug($"Added tour {tour.Name} with {tourLogs.Count} logs");
+                return tour;
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Failed to add tour with logs: {e.Message}");
+                throw new PostgresDataBaseException("Failed to add tour with logs", e);
+            }
+        }
+
+
     }
 }
